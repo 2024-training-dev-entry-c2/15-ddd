@@ -4,7 +4,7 @@ import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class CompletedTransaction extends DomainEvent {
 
-  public CompletedTransaction(String name) {
-    super(name);
+  public CompletedTransaction() {
+    super(EventsEnum.COMPLETED_TRANSACTION.name() );
   }
 }

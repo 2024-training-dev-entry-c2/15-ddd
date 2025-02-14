@@ -1,4 +1,10 @@
 package com.monopoly.monopoly_managment.domain.property.events;
 
-public class MadeImprovement {
+import com.monopoly.shared.domain.generic.DomainEvent;
+
+public class MadeImprovement extends DomainEvent {
+
+  public MadeImprovement() {
+    super(EventsEnum.MADE_IMPROVEMENT.name() );
+  }
 }
