@@ -9,7 +9,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd" />
+            <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/monopoly_management" />
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/shared" />
+            <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/monopoly_management/src/domain" />
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/shared/src/domain" />
           </set>
         </option>
