@@ -47,4 +47,11 @@ public class Mortgage extends Entity<MortgageId> {
   public void setCancellationCost(CancellationCost cancellationCost) {
     this.cancellationCost = cancellationCost;
   }
+
+  public Double calculateValue(){
+
+  }
+
+
+
 }

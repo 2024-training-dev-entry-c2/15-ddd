@@ -36,4 +36,25 @@ public class Transaction extends Entity<TransactionId> {
   public void setType(Type type) {
     this.type = type;
   }
+
+  public void validate(){
+    if(amount == null || type == null){
+      throw new IllegalArgumentException("Amount and type must be provided");
+    }
+
+    if(amount.getValue() < 0){
+      throw new IllegalArgumentException("Amount must be positive");
+    }
+
+    if (amount.getValue() > 10000){
+      throw new IllegalArgumentException("Amount must be less than 10000");
+    }
+  }
+
+  public String toString() {
+    return "Transaction{" +
+            "amount=" + amount +
+            ", type=" + type +
+            '}';
+  }
 }

@@ -48,4 +48,18 @@ public class Contract extends Entity<ContractId> {
   public void setParties(Parties parties) {
     this.parties = parties;
   }
+
+  public void sign(){
+
+  }
+
+  public void cancel(){
+
+  }
+
+  public Double calculateRentalRate(){
+
+  }
+
+
 }
