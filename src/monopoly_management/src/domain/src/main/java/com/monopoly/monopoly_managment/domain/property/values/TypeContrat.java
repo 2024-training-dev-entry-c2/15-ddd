@@ -21,6 +21,6 @@ public class TypeContrat implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateNull(value, "TypeContrat value");
+    Validator.validateEnum(TypeImprovementEnum.class, value, "TypeContrat value");
   }
 }
