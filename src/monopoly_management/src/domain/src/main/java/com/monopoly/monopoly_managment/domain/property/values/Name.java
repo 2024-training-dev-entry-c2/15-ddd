@@ -21,7 +21,7 @@ public class Name implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateString(value, "Name");
-    Validator.validateAlias(value, "Name");
+    Validator.validateString(this.value, "Name");
+    Validator.validateAlias(this.value, "Name");
   }
 }

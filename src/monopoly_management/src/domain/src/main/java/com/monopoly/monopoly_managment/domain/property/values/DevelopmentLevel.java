@@ -21,6 +21,6 @@ public class DevelopmentLevel implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateRange(value, 0, 8, "Development level");
+    Validator.validateRange(this.value, 0, 8, "Development level");
   }
 }

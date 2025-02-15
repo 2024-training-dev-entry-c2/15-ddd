@@ -23,6 +23,6 @@ public class Portfolio implements IValueObject {
 
   @Override
   public void validate() {
-    propertiesIds.forEach(propertyId -> Validator.validateUUID(propertyId, "Property ID"));
+    this.propertiesIds.forEach(propertyId -> Validator.validateUUID(propertyId, "Property ID"));
   }
 }

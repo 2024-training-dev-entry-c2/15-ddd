@@ -21,6 +21,6 @@ public class ColorGroup implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validatePropertyGroup(value);
+    Validator.validatePropertyGroup(this.value);
   }
 }

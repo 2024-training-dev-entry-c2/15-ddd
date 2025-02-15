@@ -21,7 +21,7 @@ public class Price implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateNegative(value, "Price");
-    Validator.validateMax(value, 1000000.0, "Price");
+    Validator.validateNegative(this.value, "Price");
+    Validator.validateMax(this.value, 1000000.0, "Price");
   }
 }

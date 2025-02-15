@@ -21,6 +21,6 @@ public class TypeImprovement implements IValueObject {
 
   @Override
   public void validate(){
-    Validator.validateEnum(TypeImprovementEnum.class, value, "TypeImprovement value");
+    Validator.validateEnum(TypeImprovementEnum.class, this.value, "TypeImprovement value");
   }
 }

@@ -27,7 +27,7 @@ public class Parties implements IValueObject {
 
   @Override
   public void validate(){
-    Validator.validateEnum(PartsEnum.class, ownerId, "Owner ID");
-    Validator.validateEnum(PartsEnum.class, tenantId, "Tenant ID");
+    Validator.validateEnum(PartsEnum.class, this.ownerId, "Owner ID");
+    Validator.validateEnum(PartsEnum.class, this.tenantId, "Tenant ID");
   }
 }

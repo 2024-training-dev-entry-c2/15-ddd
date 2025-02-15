@@ -21,7 +21,7 @@ public class Value implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateNegative(value, "Value");
-    Validator.validateMax(value, 1000000.0, "Value");
+    Validator.validateNegative(this.value, "Value");
+    Validator.validateMax(this.value, 1000000.0, "Value");
   }
 }

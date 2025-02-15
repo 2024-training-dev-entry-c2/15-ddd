@@ -21,6 +21,6 @@ public class IsMortgaged implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateNull(value, "Is mortgaged");
+    Validator.validateNull(this.value, "Is mortgaged");
   }
 }
