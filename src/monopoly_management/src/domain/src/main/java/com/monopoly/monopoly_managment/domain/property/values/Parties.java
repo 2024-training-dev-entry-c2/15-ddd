@@ -1,22 +1,34 @@
 package com.monopoly.monopoly_managment.domain.property.values;
 
-public class Parties {
-  private final String ownerId;
-  private final String tenantId;
+import com.monopoly.shared.domain.generic.IValueObject;
+import com.monopoly.shared.domain.utils.Validator;
 
-  public Parties (String ownerId, String tenantId){
-    if (ownerId == null || tenantId == null) {
-      throw new IllegalArgumentException("Owner and tenant cannot be null");
-    }
+public class Parties implements IValueObject {
+  private final PartsEnum ownerId;
+  private final PartsEnum tenantId;
+
+  private Parties(PartsEnum ownerId, PartsEnum tenantId) {
     this.ownerId = ownerId;
     this.tenantId = tenantId;
+    validate();
   }
 
-  public String getOwnerId() {
+  public static Parties of(PartsEnum ownerId, PartsEnum tenantId) {
+    return new Parties(ownerId, tenantId);
+  }
+
+  public PartsEnum getOwnerId() {
     return ownerId;
   }
 
-  public String getTenantId() {
+  public PartsEnum getTenantId() {
     return tenantId;
   }
+
+  @Override
+  public void validate(){
+    Validator.validateNull(ownerId, "Owner ID");
+    Validator.validateNull(tenantId, "Tenant ID");
+  }
+
 }
