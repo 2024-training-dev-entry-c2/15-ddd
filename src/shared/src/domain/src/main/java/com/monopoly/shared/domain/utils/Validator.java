@@ -55,4 +55,8 @@ public class Validator {
   public static void validateRange(Integer value, Integer min, Integer max, String fieldName) {
     ValidateRange.execute(value, min, max, fieldName);
   }
+
+  public static void validateNotEquals(String value1, String value2, String fieldName) {
+    ValidateNotEqual.execute(value1, value2, fieldName);
+  }
 }

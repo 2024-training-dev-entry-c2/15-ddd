@@ -16,6 +16,8 @@ import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
 import com.monopoly.monopoly_managment.domain.property.values.Name;
 import com.monopoly.monopoly_managment.domain.property.values.Price;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
+import com.monopoly.monopoly_managment.domain.property.values.TypeContrat;
+import com.monopoly.monopoly_managment.domain.property.values.TypeContratEnum;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 
@@ -32,12 +34,22 @@ public class Property extends AggregateRoot<PropertyId> {
   private ColorGroup colorGroup;
 
   // region Constructors
-  private Property(PropertyId identity) {
+  private Property(PropertyId identity, Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
     super(identity);
+    this.contract = contract;
+    this.mortgage = mortgage;
+    this.name = name;
+    this.price = price;
+    this.colorGroup = colorGroup;
   }
 
-  public Property() {
+  public Property(Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
     super(new PropertyId());
+    this.contract = contract;
+    this.mortgage = mortgage;
+    this.name = name;
+    this.price = price;
+    this.colorGroup = colorGroup;
   }
 
   // endregion
@@ -142,6 +154,9 @@ public void modifyOwner(String ownerId, String propertyId, String previousOwnerI
   // endregion
 
   // region Public Methods
+  public void assignOwner(Owner owner, Contract contract) {
+
+  }
 
   // endregion
 
