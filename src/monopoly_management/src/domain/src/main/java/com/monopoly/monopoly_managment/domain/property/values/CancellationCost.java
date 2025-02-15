@@ -22,5 +22,6 @@ public class CancellationCost implements IValueObject {
   @Override
   public void validate() {
     Validator.validateNegative(value, "CancellationCost value");
+    Validator.validateMax(value, 1000000.0, "CancellationCost value");
   }
 }

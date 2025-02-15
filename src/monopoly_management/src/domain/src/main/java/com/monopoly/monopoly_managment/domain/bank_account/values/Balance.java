@@ -22,5 +22,6 @@ public class Balance implements IValueObject {
   @Override
   public void validate() {
     Validator.validateNegative(value, "Balance value");
+    Validator.validateMax(value, 1000000.0, "Balance value");
   }
 }

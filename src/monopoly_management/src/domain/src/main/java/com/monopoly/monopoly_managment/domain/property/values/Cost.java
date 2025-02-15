@@ -28,6 +28,7 @@ public class Cost implements IValueObject {
   @Override
   public void validate() {
     Validator.validateNegative(cost, "Cost value");
+    Validator.validateMax(cost, 1000000.0, "Cost value");
   }
 
 }

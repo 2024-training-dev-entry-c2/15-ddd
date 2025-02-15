@@ -21,6 +21,6 @@ public class Token implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateString(value, "Token");
+    Validator.validateUUID(value, "Token");
   }
 }

@@ -4,23 +4,18 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class RejectedTransaction extends DomainEvent {
-  private final String accountId;
+
   private final String ownerId;
   private final String transactionId;
   private final TypeEnum type;
   private final Double amount;
 
-  public RejectedTransaction(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount) {
+  public RejectedTransaction(String ownerId, String transactionId, TypeEnum type, Double amount) {
     super(EventsEnum.REJECTED_TRANSACTION.name() );
-    this.accountId = accountId;
     this.ownerId = ownerId;
     this.transactionId = transactionId;
     this.type = type;
     this.amount = amount;
-  }
-
-  public String getAccountId() {
-    return accountId;
   }
 
   public String getOwnerId() {

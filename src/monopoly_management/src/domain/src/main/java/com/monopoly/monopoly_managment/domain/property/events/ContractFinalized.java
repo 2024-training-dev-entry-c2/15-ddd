@@ -7,7 +7,6 @@ public class ContractFinalized extends DomainEvent {
   private final String propertyId;
   private final String ownerId;
 
-
   public ContractFinalized(String contractId, String propertyId, String ownerId) {
     super(EventsEnum.CONTRACT_FINALIZED.name());
     this.contractId = contractId;

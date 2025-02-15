@@ -21,6 +21,6 @@ public class Type implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateNull(value, "Type value");
-}
+    Validator.validateEnum(TypeEnum.class, value, "Type value");
+  }
 }

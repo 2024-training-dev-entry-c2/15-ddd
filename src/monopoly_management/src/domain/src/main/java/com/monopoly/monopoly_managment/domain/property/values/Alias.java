@@ -21,6 +21,6 @@ public class Alias implements IValueObject {
 
   @Override
   public void validate() {
-    Validator.validateString(value, "Alias value");
+    Validator.validateAlias(value, "Alias value");
   }
 }
