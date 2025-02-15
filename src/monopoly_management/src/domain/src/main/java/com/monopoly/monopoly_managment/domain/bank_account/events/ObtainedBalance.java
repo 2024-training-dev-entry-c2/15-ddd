@@ -3,7 +3,6 @@ package com.monopoly.monopoly_managment.domain.bank_account.events;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class ObtainedBalance extends DomainEvent {
-
   private final String accountId;
   private final Double amount;
 
@@ -16,7 +15,6 @@ public class ObtainedBalance extends DomainEvent {
   public String getAccountId() {
     return accountId;
   }
-
   public Double getAmount() {
     return amount;
   }

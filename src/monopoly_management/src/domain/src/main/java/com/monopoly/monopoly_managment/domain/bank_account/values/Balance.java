@@ -6,7 +6,7 @@ import com.monopoly.shared.domain.utils.Validator;
 public class Balance implements IValueObject {
   private final Double value;
 
-  private Balance(final Double value) {
+  public Balance(final Double value) {
     this.value = value;
     validate();
   }

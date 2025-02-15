@@ -4,7 +4,6 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class RejectedTransaction extends DomainEvent {
-
   private final String ownerId;
   private final String transactionId;
   private final TypeEnum type;
