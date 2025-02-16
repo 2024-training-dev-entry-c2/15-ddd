@@ -59,4 +59,8 @@ public class Validator {
   public static void validateNotEquals(String value1, String value2, String fieldName) {
     ValidateNotEqual.execute(value1, value2, fieldName);
   }
+
+  public static void validateBiggerThan(Double value, Double min, String fieldName) {
+    ValidateBiggerThan.execute(value, min, fieldName);
+  }
 }

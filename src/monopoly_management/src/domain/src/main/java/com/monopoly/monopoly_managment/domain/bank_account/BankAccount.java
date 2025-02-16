@@ -2,8 +2,10 @@ package com.monopoly.monopoly_managment.domain.bank_account;
 
 import com.monopoly.monopoly_managment.domain.bank_account.entities.Transaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.CompletedTransaction;
+import com.monopoly.monopoly_managment.domain.bank_account.events.NotValidatedFounds;
 import com.monopoly.monopoly_managment.domain.bank_account.events.ObtainedBalance;
 import com.monopoly.monopoly_managment.domain.bank_account.events.RejectedTransaction;
+import com.monopoly.monopoly_managment.domain.bank_account.events.ValidatedFounds;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
@@ -72,6 +74,14 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   public void obtainedBalance(String accountId, Double amount){
     apply(new ObtainedBalance(accountId, amount));
   }
+
+  public void validatedFounds(String accountId, Double amount, TypeEnum type){
+    apply(new ValidatedFounds(accountId, amount, type));
+  }
+
+  public void notValidatedFounds(String accountId, Double amount, TypeEnum type){
+    apply(new NotValidatedFounds(accountId, amount, type));
+  }
   // endregion
 
   // region Public Methods
@@ -95,8 +105,10 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // region Private Methods
   private void validateFunds(Transaction transaction){
       if(balance.getValue() < transaction.getAmount().getValue()){
+        notValidatedFounds(this.getIdentity().getValue(), transaction.getAmount().getValue(), transaction.getType().getValue());
         throw new IllegalArgumentException("Insufficient funds");
       }
+      validatedFounds(this.getIdentity().getValue(), transaction.getAmount().getValue(), transaction.getType().getValue());
   }
 
   private void plusBalance(Transaction transaction){

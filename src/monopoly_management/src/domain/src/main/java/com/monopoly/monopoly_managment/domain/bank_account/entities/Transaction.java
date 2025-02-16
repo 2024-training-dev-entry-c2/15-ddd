@@ -65,10 +65,6 @@ public class Transaction extends Entity<TransactionId> {
   }
 
   public void validate(){
-    Validator.validateNull(amount, "Amount");
-    Validator.validateNull(type, "Type");
-    Validator.validateNegative(amount.getValue(), "Amount");
-    Validator.validateMax(amount.getValue(), 10000.0, "Amount");
     Validator.validateNotEquals(destiny.getValue(), origin.getValue(), "Destiny and Origin");
   }
 

@@ -3,31 +3,38 @@ package com.monopoly.monopoly_managment.domain.property.values;
 import com.monopoly.shared.domain.generic.IValueObject;
 import com.monopoly.shared.domain.utils.Validator;
 
-public class Parties implements IValueObject {
-  private final PartsEnum ownerId;
-  private final PartsEnum tenantId;
+import java.util.List;
 
-  private Parties(PartsEnum ownerId, PartsEnum tenantId) {
+public class Parties implements IValueObject {
+  private final OwnerId ownerId;
+  private final List<OwnerId> tenantId;
+
+  private Parties(OwnerId ownerId, List<OwnerId> tenantId) {
     this.ownerId = ownerId;
     this.tenantId = tenantId;
     validate();
   }
 
-  public static Parties of(PartsEnum ownerId, PartsEnum tenantId) {
-    return new Parties(ownerId, tenantId);
+  private Parties(OwnerId ownerId) {
+    this.ownerId = ownerId;
+    this.tenantId = null;
+    validate();
   }
 
-  public PartsEnum getOwnerId() {
+  public static Parties of(OwnerId ownerId) {
+    return new Parties(ownerId);
+  }
+
+  public OwnerId getOwnerId() {
     return ownerId;
   }
 
-  public PartsEnum getTenantId() {
+  public List<OwnerId> getTenantId() {
     return tenantId;
   }
 
   @Override
   public void validate(){
-    Validator.validateEnum(PartsEnum.class, this.ownerId, "Owner ID");
-    Validator.validateEnum(PartsEnum.class, this.tenantId, "Tenant ID");
+    Validator.validateNull(this.ownerId, "Owner id");
   }
 }

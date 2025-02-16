@@ -48,10 +48,18 @@ public class Mortgage extends Entity<MortgageId> {
     this.cancellationCost = cancellationCost;
   }
 
-  public Double calculateValue(){
-
+  public void activate(){
+    if (getIsMortgaged().getValue()){
+      throw new IllegalStateException(" Mortage is already active ");
+    }
+    this.isMortgaged = IsMortgaged.of(true);
   }
 
 
-
+ public void cancel(){
+    if (!getIsMortgaged().getValue()){
+      throw new IllegalStateException(" Mortage is not active ");
+    }
+    this.isMortgaged = IsMortgaged.of(false);
+ }
 }
