@@ -1,15 +1,12 @@
 package com.monopoly.monopoly_managment.domain.property;
 
-import com.monopoly.monopoly_managment.domain.bank_account.events.CompletedTransaction;
+
 import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
-import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
-import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
 import com.monopoly.monopoly_managment.domain.property.entities.Mortgage;
 import com.monopoly.monopoly_managment.domain.property.entities.Owner;
 import com.monopoly.monopoly_managment.domain.property.entities.Upgrade;
-import com.monopoly.monopoly_managment.domain.property.events.ContractSigned;
 import com.monopoly.monopoly_managment.domain.property.events.DemolishedImprovement;
 import com.monopoly.monopoly_managment.domain.property.events.MadeImprovement;
 import com.monopoly.monopoly_managment.domain.property.events.MortgageCanceled;
@@ -18,15 +15,12 @@ import com.monopoly.monopoly_managment.domain.property.events.OwnerAssigned;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerModified;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerRemoved;
 import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
-import com.monopoly.monopoly_managment.domain.property.values.ContractId;
 import com.monopoly.monopoly_managment.domain.property.values.Cost;
 import com.monopoly.monopoly_managment.domain.property.values.DevelopmentLevel;
 import com.monopoly.monopoly_managment.domain.property.values.Name;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.monopoly_managment.domain.property.values.Price;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
-import com.monopoly.monopoly_managment.domain.property.values.Rate;
-import com.monopoly.monopoly_managment.domain.property.values.TypeContratEnum;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovement;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.shared.domain.generic.AggregateRoot;
@@ -149,14 +143,6 @@ public class Property extends AggregateRoot<PropertyId> {
     apply(new MortgageCanceled(ownerId, propertyId, amount));
   }
 
-  public void signedContract(String contractId, String propertyId, String ownerId, TypeContratEnum contractType, Double rate, String tenantId) {
-    apply(new ContractSigned(contractId, propertyId, ownerId, contractType, rate, tenantId));
-  }
-
-  public void finalizedContract(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount){
-    apply(new CompletedTransaction(accountId, ownerId, transactionId, type, amount));
-  }
-
   public void assignedOwner(String ownerId, String propertyId) {
     apply(new OwnerAssigned(ownerId, propertyId));
   }
@@ -208,27 +194,12 @@ public class Property extends AggregateRoot<PropertyId> {
     canceledMortgage(ownerId.getValue(), this.getIdentity().getValue(), amount.getValue());
   }
 
-  public void signContract(ContractId contractId, OwnerId ownerId, TypeContratEnum contractType, Rate rate, OwnerId tenantId) {
-    if (contract.getIsActive().getValue()) {
-      throw new RuntimeException("The contract is already signed");
-    }
-    contract.sign(ownerId);
-    signedContract(contractId.getValue(), this.getIdentity().getValue(), ownerId.getValue(), contractType, rate.getBase(), tenantId.getValue());
-  }
-
-  public void finalizeContract(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount){
-    if (!contract.getIsActive().getValue()) {
-      throw new RuntimeException("The contract is already canceled");
-    }
-    contract.cancel();
-    finalizedContract(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount.getValue());
-  }
-
   public void assignOwner(OwnerId ownerId) {
     if ( owner.getIdentity().getValue() != null) {
       throw new RuntimeException("The property already has an owner");
     }
     owner.acquireProperty(getIdentity());
+    contract.sign(ownerId);
     assignedOwner(ownerId.getValue(), this.getIdentity().getValue());
   }
 
@@ -236,6 +207,7 @@ public class Property extends AggregateRoot<PropertyId> {
     if ( owner.getIdentity().getValue() == null) {
       throw new RuntimeException("The property does not have an owner");
     }
+    contract.cancel();
     owner.sellProperty(getIdentity());
     removedOwner(ownerId.getValue(), this.getIdentity().getValue());
   }
@@ -245,6 +217,8 @@ public class Property extends AggregateRoot<PropertyId> {
       throw new RuntimeException("The property does not have an owner");
     }
     owner.transferProperty(getIdentity(), previousOwner);
+    contract.cancel();
+    previousOwner.sellProperty(getIdentity());
     modifiedOwner(ownerId.getValue(), this.getIdentity().getValue(), previousOwner.getIdentity().getValue());
   }
     // endregion

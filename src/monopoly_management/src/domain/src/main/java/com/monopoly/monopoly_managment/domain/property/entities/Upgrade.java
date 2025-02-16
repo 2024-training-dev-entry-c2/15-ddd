@@ -33,11 +33,6 @@ public class Upgrade extends Entity<UpgradeId> {
     return typeImprovement;
   }
 
-
-  public void setTypeImprovement(TypeImprovement typeImprovement) {
-    this.typeImprovement = typeImprovement;
-  }
-
   public PropertyId getPropertyId() {
     return propertyId;
   }
