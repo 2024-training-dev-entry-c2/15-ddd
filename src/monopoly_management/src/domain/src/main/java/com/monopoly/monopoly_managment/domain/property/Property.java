@@ -1,6 +1,5 @@
 package com.monopoly.monopoly_managment.domain.property;
 
-
 import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
@@ -23,7 +22,6 @@ import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
-
 
 public class Property extends AggregateRoot<PropertyId> {
   private BankAccountId bankAccountId;
@@ -53,11 +51,9 @@ public class Property extends AggregateRoot<PropertyId> {
     this.price = price;
     this.colorGroup = colorGroup;
   }
-
   // endregion
 
   // region Getters and Setters
-
   public BankAccountId getBankAccountId() {
     return bankAccountId;
   }
@@ -121,7 +117,6 @@ public class Property extends AggregateRoot<PropertyId> {
   public void setColorGroup(ColorGroup colorGroup) {
     this.colorGroup = colorGroup;
   }
-
   // endregion
 
   // region Domain Actions
@@ -152,20 +147,13 @@ public class Property extends AggregateRoot<PropertyId> {
   public void modifiedOwner(OwnerId ownerId, PropertyId propertyId, OwnerId previousOwnerId) {
     apply(new OwnerModified(ownerId.getValue(), propertyId.getValue(), previousOwnerId.getValue()));
   }
-
   // endregion
 
   // region Public Methods
   public void makeImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
-    if (getBalance() < cost.getValue()) {
-      throw new RuntimeException("The balance is not enough to make the improvement");
-    }
-    if (getDevelopmentLevel() == 8) {
-      throw new RuntimeException("The property is already at its maximum level");
-    }
-    if (!owner.validateMonopoly( colorGroup )){
-      throw new RuntimeException("The owner does not have a monopoly of the color group");
-    }
+    validateSufficientBalance(cost);
+    validateMaximumDevelopmentLevel();
+    validateOwnerMonopoly();
     improvements.build();
     subtractBalance(cost.getValue());
     madeImprovement(improvementId, propertyId, type, cost);
@@ -192,9 +180,7 @@ public class Property extends AggregateRoot<PropertyId> {
     if (!mortgage.getIsMortgaged().getValue()) {
       throw new RuntimeException("The property is not mortgaged");
     }
-    if (getBalance() < mortgage.calculateCancellationCost()){
-      throw new RuntimeException(" Not enough balance ");
-    }
+    validateCancelMortgage();
     mortgage.cancel();
     canceledMortgage(ownerId, this.getIdentity(), amount);
   }
@@ -240,6 +226,30 @@ public class Property extends AggregateRoot<PropertyId> {
   }
 
   private void subtractBalance(Double balance){
+  }
+
+  private void validateSufficientBalance(Cost cost) {
+    if (getBalance() < cost.getValue()) {
+      throw new RuntimeException("The balance is not enough to make the improvement");
+    }
+  }
+
+  private void validateCancelMortgage(){
+    if (getBalance() < mortgage.calculateCancellationCost()){
+      throw new RuntimeException(" Not enough balance ");
+    }
+  }
+
+  private void validateMaximumDevelopmentLevel() {
+    if (getDevelopmentLevel() == 8) {
+      throw new RuntimeException("The property is already at its maximum level");
+    }
+  }
+
+  private void validateOwnerMonopoly() {
+    if (!owner.validateMonopoly(colorGroup)) {
+      throw new RuntimeException("The owner does not have a monopoly of the color group");
+    }
   }
   // endregion
 }
