@@ -2,6 +2,7 @@ package com.monopoly.monopoly_managment.domain.property.entities;
 
 import com.monopoly.monopoly_managment.domain.property.Property;
 import com.monopoly.monopoly_managment.domain.property.values.Alias;
+import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.monopoly_managment.domain.property.values.Portfolio;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
@@ -85,7 +86,7 @@ public class Owner extends Entity<OwnerId> {
   return Wealth.of(wealth.getBalance() + portfolio.getPropertiesIds().stream().map(PropertyId::of).map(this::getPropertyValue).reduce(0.0, Double::sum), portfolio.getPropertiesIds());
   }
 
-  public Boolean validateMonopoly(String group) {
+  public Boolean validateMonopoly(ColorGroup group) {
     return portfolio.getPropertiesIds().stream().filter(propertyId -> Property.of(propertyId).getGroup().equals(group)).count() == getRealGroupSize(group);
   }
 

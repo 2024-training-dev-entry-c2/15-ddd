@@ -16,20 +16,18 @@ import com.monopoly.monopoly_managment.domain.property.events.OwnerModified;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerRemoved;
 import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
 import com.monopoly.monopoly_managment.domain.property.values.Cost;
-import com.monopoly.monopoly_managment.domain.property.values.DevelopmentLevel;
 import com.monopoly.monopoly_managment.domain.property.values.Name;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.monopoly_managment.domain.property.values.Price;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
-import com.monopoly.monopoly_managment.domain.property.values.TypeImprovement;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
+import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 
-import java.util.List;
 
 public class Property extends AggregateRoot<PropertyId> {
   private BankAccountId bankAccountId;
-  private List<Upgrade> improvements;
+  private Upgrade improvements;
   private Contract contract;
   private Mortgage mortgage;
   private Owner owner;
@@ -68,11 +66,11 @@ public class Property extends AggregateRoot<PropertyId> {
     this.bankAccountId = bankAccountId;
   }
 
-  public List<Upgrade> getImprovements() {
+  public Upgrade getImprovements() {
     return improvements;
   }
 
-  public void setImprovements(List<Upgrade> improvements) {
+  public void setImprovements(Upgrade improvements) {
     this.improvements = improvements;
   }
 
@@ -127,55 +125,59 @@ public class Property extends AggregateRoot<PropertyId> {
   // endregion
 
   // region Domain Actions
-  public void madeImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
-    apply(new MadeImprovement(improvementId, propertyId, type, cost));
+  public void madeImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
+    apply(new MadeImprovement(improvementId.getValue(), propertyId.getValue(), type, cost.getValue()));
   }
 
-  public void demolishedImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
-    apply(new DemolishedImprovement(improvementId, propertyId, type, cost));
+  public void demolishedImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
+    apply(new DemolishedImprovement(improvementId.getValue(), propertyId.getValue(), type, cost.getValue()));
   }
 
-  public void mortgaged(String ownerId, String propertyId, Double amount) {
-    apply(new MortgageConstituted(ownerId, propertyId, amount));
+  public void mortgaged(OwnerId ownerId, PropertyId propertyId, Amount amount) {
+    apply(new MortgageConstituted(ownerId.getValue(), propertyId.getValue(), amount.getValue()));
   }
 
-  public void canceledMortgage(String ownerId, String propertyId, Double amount) {
-    apply(new MortgageCanceled(ownerId, propertyId, amount));
+  public void canceledMortgage(OwnerId ownerId, PropertyId propertyId, Amount amount) {
+    apply(new MortgageCanceled(ownerId.getValue(), propertyId.getValue(), amount.getValue()));
   }
 
-  public void assignedOwner(String ownerId, String propertyId) {
-    apply(new OwnerAssigned(ownerId, propertyId));
+  public void assignedOwner(OwnerId ownerId, PropertyId propertyId) {
+    apply(new OwnerAssigned(ownerId.getValue(), propertyId.getValue()));
   }
 
-  public void removedOwner(String ownerId, String propertyId) {
-    apply(new OwnerRemoved(ownerId, propertyId));
+  public void removedOwner(OwnerId ownerId, PropertyId propertyId) {
+    apply(new OwnerRemoved(ownerId.getValue(), propertyId.getValue()));
   }
 
-  public void modifiedOwner(String ownerId, String propertyId, String previousOwnerId) {
-    apply(new OwnerModified(ownerId, propertyId, previousOwnerId));
+  public void modifiedOwner(OwnerId ownerId, PropertyId propertyId, OwnerId previousOwnerId) {
+    apply(new OwnerModified(ownerId.getValue(), propertyId.getValue(), previousOwnerId.getValue()));
   }
 
   // endregion
 
   // region Public Methods
-  public void makeImprovement(TypeImprovement improvement, DevelopmentLevel developmentLevel, Cost cost, PropertyId propertyId) {
+  public void makeImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
     if (getBalance() < cost.getValue()) {
       throw new RuntimeException("The balance is not enough to make the improvement");
     }
-    Upgrade upgrade = new Upgrade(improvement, developmentLevel,propertyId ,cost);
-    this.improvements.add(upgrade);
+    if (getDevelopmentLevel() == 8) {
+      throw new RuntimeException("The property is already at its maximum level");
+    }
+    if (!owner.validateMonopoly( colorGroup )){
+      throw new RuntimeException("The owner does not have a monopoly of the color group");
+    }
+    improvements.build();
     subtractBalance(cost.getValue());
-    madeImprovement(upgrade.getIdentity().getValue(), propertyId.getValue(), improvement.getValue(), cost.getValue());
+    madeImprovement(improvementId, propertyId, type, cost);
   }
 
-  public void demolishImprovement(TypeImprovement improvement, DevelopmentLevel developmentLevel, Cost cost, PropertyId propertyId) {
-    if (developmentLevel.getValue() == 0) {
+  public void demolishImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
+    if (getDevelopmentLevel() == 0) {
       throw new RuntimeException("The property is already at its minimum level");
     }
-    Upgrade upgrade = new Upgrade(improvement, developmentLevel,propertyId ,cost);
-    this.improvements.remove(upgrade);
+    improvements.downgrade();
     addBalance(cost.getValue());
-    demolishedImprovement(upgrade.getIdentity().getValue(), propertyId.getValue(), improvement.getValue(), cost.getValue());
+    demolishedImprovement(improvementId, propertyId, type, cost);
   }
 
   public void mortgage(OwnerId ownerId, Amount amount) {
@@ -183,15 +185,18 @@ public class Property extends AggregateRoot<PropertyId> {
       throw new RuntimeException("The property is already mortgaged");
     }
     mortgage.activate();
-    mortgaged(ownerId.getValue(), this.getIdentity().getValue(), amount.getValue());
+    mortgaged(ownerId, this.getIdentity(), amount);
   }
 
   public void cancelMortgage(OwnerId ownerId, Amount amount) {
     if (!mortgage.getIsMortgaged().getValue()) {
       throw new RuntimeException("The property is not mortgaged");
     }
+    if (getBalance() < mortgage.calculateCancellationCost()){
+      throw new RuntimeException(" Not enough balance ");
+    }
     mortgage.cancel();
-    canceledMortgage(ownerId.getValue(), this.getIdentity().getValue(), amount.getValue());
+    canceledMortgage(ownerId, this.getIdentity(), amount);
   }
 
   public void assignOwner(OwnerId ownerId) {
@@ -200,7 +205,7 @@ public class Property extends AggregateRoot<PropertyId> {
     }
     owner.acquireProperty(getIdentity());
     contract.sign(ownerId);
-    assignedOwner(ownerId.getValue(), this.getIdentity().getValue());
+    assignedOwner(ownerId, this.getIdentity()));
   }
 
   public void removeOwner(OwnerId ownerId) {
@@ -209,7 +214,7 @@ public class Property extends AggregateRoot<PropertyId> {
     }
     contract.cancel();
     owner.sellProperty(getIdentity());
-    removedOwner(ownerId.getValue(), this.getIdentity().getValue());
+    removedOwner(ownerId, this.getIdentity());
   }
 
   public void modifyOwner(OwnerId ownerId, Owner previousOwner) {
@@ -219,10 +224,14 @@ public class Property extends AggregateRoot<PropertyId> {
     owner.transferProperty(getIdentity(), previousOwner);
     contract.cancel();
     previousOwner.sellProperty(getIdentity());
-    modifiedOwner(ownerId.getValue(), this.getIdentity().getValue(), previousOwner.getIdentity().getValue());
+    modifiedOwner(ownerId, this.getIdentity(), previousOwner.getIdentity());
   }
     // endregion
     // region Private Methods
+  private Integer getDevelopmentLevel() {
+    return improvements.getDevelopmentLevel().getValue();
+  }
+
   private Double getBalance() {
     return 4.0;
   }

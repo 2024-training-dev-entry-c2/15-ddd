@@ -6,8 +6,10 @@ import com.monopoly.monopoly_managment.domain.bank_account.events.NotValidatedFo
 import com.monopoly.monopoly_managment.domain.bank_account.events.ObtainedBalance;
 import com.monopoly.monopoly_managment.domain.bank_account.events.RejectedTransaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.ValidatedFounds;
+import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
+import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
@@ -53,7 +55,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   }
 
   public Balance getBalance() {
-    obtainedBalance(this.getIdentity().getValue(), balance.getValue());
+    obtainedBalance(this.getIdentity(), balance.getValue());
     return balance;
   }
 
@@ -63,24 +65,24 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // endregion
 
   // region Domain Actions
-  public void registeredTransaction(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount){
-    apply(new CompletedTransaction(accountId, ownerId, transactionId, type, amount));
+  public void registeredTransaction(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount){
+    apply(new CompletedTransaction(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount.getValue()));
   }
 
-  public void canceledTransaction(String ownerId, String transactionId, TypeEnum type, Double amount){
-    apply(new RejectedTransaction(ownerId, transactionId, type, amount));
+  public void canceledTransaction(OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount){
+    apply(new RejectedTransaction(ownerId.getValue(), transactionId.getValue(), type, amount.getValue()));
   }
 
-  public void obtainedBalance(String accountId, Double amount){
-    apply(new ObtainedBalance(accountId, amount));
+  public void obtainedBalance(BankAccountId accountId, Double amount){
+    apply(new ObtainedBalance(accountId.getValue(), amount));
   }
 
-  public void validatedFounds(String accountId, Double amount, TypeEnum type){
-    apply(new ValidatedFounds(accountId, amount, type));
+  public void validatedFounds(BankAccountId accountId, Amount amount, TypeEnum type){
+    apply(new ValidatedFounds(accountId.getValue(), amount.getValue(), type));
   }
 
-  public void notValidatedFounds(String accountId, Double amount, TypeEnum type){
-    apply(new NotValidatedFounds(accountId, amount, type));
+  public void notValidatedFounds(BankAccountId accountId, Amount amount, TypeEnum type){
+    apply(new NotValidatedFounds(accountId.getValue(), amount.getValue(), type));
   }
   // endregion
 
@@ -95,9 +97,9 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
         minusBalance(transaction);
       }
       this.transactions.add(transaction);
-      registeredTransaction(this.getIdentity().getValue(), this.ownerId.getValue(), transaction.getIdentity().getValue(), transaction.getType().getValue(), transaction.getAmount().getValue());
+      registeredTransaction(this.getIdentity(), this.ownerId, transaction.getIdentity(), transaction.getType().getValue(), transaction.getAmount());
     }catch (IllegalArgumentException e){
-      canceledTransaction(this.ownerId.getValue(), transaction.getIdentity().getValue(), transaction.getType().getValue(), transaction.getAmount().getValue());
+      canceledTransaction(this.ownerId, transaction.getIdentity(), transaction.getType().getValue(), transaction.getAmount());
     }
   }
   // endregion
@@ -105,10 +107,10 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // region Private Methods
   private void validateFunds(Transaction transaction){
       if(balance.getValue() < transaction.getAmount().getValue()){
-        notValidatedFounds(this.getIdentity().getValue(), transaction.getAmount().getValue(), transaction.getType().getValue());
+        notValidatedFounds(this.getIdentity(), transaction.getAmount(), transaction.getType().getValue());
         throw new IllegalArgumentException("Insufficient funds");
       }
-      validatedFounds(this.getIdentity().getValue(), transaction.getAmount().getValue(), transaction.getType().getValue());
+      validatedFounds(this.getIdentity(), transaction.getAmount(), transaction.getType().getValue());
   }
 
   private void plusBalance(Transaction transaction){
