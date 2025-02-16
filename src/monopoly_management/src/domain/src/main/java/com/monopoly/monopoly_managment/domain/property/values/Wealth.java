@@ -18,6 +18,10 @@ public class Wealth implements IValueObject {
     return new Wealth(value, propertiesIds);
   }
 
+  public List<String> getPropertiesIds() {
+    return propertiesIds;
+  }
+
   public Double getBalance() {
     return balance;
   }

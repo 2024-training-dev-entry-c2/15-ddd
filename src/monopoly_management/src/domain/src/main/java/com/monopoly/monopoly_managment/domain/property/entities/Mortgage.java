@@ -52,14 +52,39 @@ public class Mortgage extends Entity<MortgageId> {
     if (getIsMortgaged().getValue()){
       throw new IllegalStateException(" Mortage is already active ");
     }
+    addBalance(calculateCost());
     this.isMortgaged = IsMortgaged.of(true);
   }
-
 
  public void cancel(){
     if (!getIsMortgaged().getValue()){
       throw new IllegalStateException(" Mortage is not active ");
     }
+   if (getBalance() < calculateCost()){
+     throw new IllegalStateException(" Not enough balance ");
+   }
     this.isMortgaged = IsMortgaged.of(false);
  }
+
+ public Double calculateCost(){
+    return getValue().getValue() * getImprovementsLevel();
+ }
+
+ public Double calculateCancellationCost(){
+    if (getIsMortgaged().getValue()){
+      throw new IllegalStateException(" Mortage is not active ");
+    }
+    return calculateCost() * 2.5;
+  }
+
+  private Integer getImprovementsLevel(){
+    return 1;
+  }
+
+  private Double getBalance(){
+    return 1.0;
+  }
+
+  private void addBalance(Double balance){
+  }
 }

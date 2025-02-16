@@ -9,9 +9,6 @@ import com.monopoly.monopoly_managment.domain.property.values.Token;
 import com.monopoly.monopoly_managment.domain.property.values.Wealth;
 import com.monopoly.shared.domain.generic.Entity;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Owner extends Entity<OwnerId> {
@@ -84,8 +81,13 @@ public class Owner extends Entity<OwnerId> {
     newOwner.acquireProperty(propertyId);
   }
 
-  public void
+  public Wealth calculateTotalWealth() {
+  return Wealth.of(wealth.getBalance() + portfolio.getPropertiesIds().stream().map(PropertyId::of).map(this::getPropertyValue).reduce(0.0, Double::sum), portfolio.getPropertiesIds());
+  }
 
+  public Boolean validateMonopoly(String group) {
+    return portfolio.getPropertiesIds().stream().filter(propertyId -> Property.of(propertyId).getGroup().equals(group)).count() == getRealGroupSize(group);
+  }
 
   private void validatePropertyOwnership(PropertyId property) {
     if (!portfolio.getPropertiesIds().contains(property.getValue())) {
@@ -98,29 +100,12 @@ public class Owner extends Entity<OwnerId> {
     }
   }
 
-  private Wealth calculateTotalWealth() {
-  Double totalWealth = portfolio.getPropertiesIds().stream()
-    .map(PropertyId::of)
-    .map(Property::valueOf)
-    .map(Property::getPrice)
-    .map(BigDecimal::doubleValue)
-    .reduce(wealth.getValue(), Double::sum);
+  private Double getPropertyValue(PropertyId propertyId) {
+    return wealth.getPropertiesIds().contains(propertyId.getValue()) ? Property.of(propertyId).getValue() : 0.0;
   }
 
-  private Portfolio updatePortfolioWithNewProperty(PropertyId propertyId) {
-    List<String> updatedProperties = Stream.concat(
-      portfolio.getPropertiesIds().stream(),
-      Stream.of(propertyId.getValue())
-    ).toList();
-
-    return Portfolio.of(updatedProperties);
+  private Integer getRealGroupSize(String group){
+    return 3;
   }
 
-  private Portfolio updatePortfolioWithoutProperty(PropertyId propertyId) {
-    List<String> updatedProperties = portfolio.getPropertiesIds().stream()
-      .filter(id -> !id.equals(propertyId.getValue()))
-      .toList();
-
-    return Portfolio.of(updatedProperties);
-  }
 }

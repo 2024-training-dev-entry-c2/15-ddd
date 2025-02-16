@@ -1,10 +1,15 @@
 package com.monopoly.monopoly_managment.domain.property;
 
+import com.monopoly.monopoly_managment.domain.bank_account.events.CompletedTransaction;
+import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
+import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
+import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
 import com.monopoly.monopoly_managment.domain.property.entities.Mortgage;
 import com.monopoly.monopoly_managment.domain.property.entities.Owner;
 import com.monopoly.monopoly_managment.domain.property.entities.Upgrade;
+import com.monopoly.monopoly_managment.domain.property.events.ContractSigned;
 import com.monopoly.monopoly_managment.domain.property.events.DemolishedImprovement;
 import com.monopoly.monopoly_managment.domain.property.events.MadeImprovement;
 import com.monopoly.monopoly_managment.domain.property.events.MortgageCanceled;
@@ -13,18 +18,19 @@ import com.monopoly.monopoly_managment.domain.property.events.OwnerAssigned;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerModified;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerRemoved;
 import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
-import com.monopoly.monopoly_managment.domain.property.values.IsMortgaged;
-import com.monopoly.monopoly_managment.domain.property.values.MortgageId;
+import com.monopoly.monopoly_managment.domain.property.values.ContractId;
+import com.monopoly.monopoly_managment.domain.property.values.Cost;
+import com.monopoly.monopoly_managment.domain.property.values.DevelopmentLevel;
 import com.monopoly.monopoly_managment.domain.property.values.Name;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.monopoly_managment.domain.property.values.Price;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
-import com.monopoly.monopoly_managment.domain.property.values.TypeContrat;
+import com.monopoly.monopoly_managment.domain.property.values.Rate;
 import com.monopoly.monopoly_managment.domain.property.values.TypeContratEnum;
+import com.monopoly.monopoly_managment.domain.property.values.TypeImprovement;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class Property extends AggregateRoot<PropertyId> {
@@ -127,178 +133,130 @@ public class Property extends AggregateRoot<PropertyId> {
   // endregion
 
   // region Domain Actions
-  public void makeImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
+  public void madeImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
     apply(new MadeImprovement(improvementId, propertyId, type, cost));
   }
 
-  public void demolishImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
+  public void demolishedImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
     apply(new DemolishedImprovement(improvementId, propertyId, type, cost));
   }
 
-  public void mortgage(String ownerId, String propertyId, Double amount) {
+  public void mortgaged(String ownerId, String propertyId, Double amount) {
     apply(new MortgageConstituted(ownerId, propertyId, amount));
   }
 
-  public void cancelMortgage(String ownerId, String propertyId, Double amount) {
+  public void canceledMortgage(String ownerId, String propertyId, Double amount) {
     apply(new MortgageCanceled(ownerId, propertyId, amount));
   }
 
-  public void assignOwnerEvent(String ownerId, String propertyId) {
+  public void signedContract(String contractId, String propertyId, String ownerId, TypeContratEnum contractType, Double rate, String tenantId) {
+    apply(new ContractSigned(contractId, propertyId, ownerId, contractType, rate, tenantId));
+  }
+
+  public void finalizedContract(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount){
+    apply(new CompletedTransaction(accountId, ownerId, transactionId, type, amount));
+  }
+
+  public void assignedOwner(String ownerId, String propertyId) {
     apply(new OwnerAssigned(ownerId, propertyId));
   }
 
-  public void removeOwnerEvent(String ownerId, String propertyId) {
+  public void removedOwner(String ownerId, String propertyId) {
     apply(new OwnerRemoved(ownerId, propertyId));
   }
 
-  public void modifyOwnerEvent(String ownerId, String propertyId, String previousOwnerId) {
+  public void modifiedOwner(String ownerId, String propertyId, String previousOwnerId) {
     apply(new OwnerModified(ownerId, propertyId, previousOwnerId));
   }
 
   // endregion
 
   // region Public Methods
-  public void assignOwner(Owner owner, Contract contract) {
-    if (!contract.getType().getValue().toString().equals(TypeContratEnum.SALE.toString())) {
-      throw new IllegalArgumentException("The contract must be of type SALE");
+  public void makeImprovement(TypeImprovement improvement, DevelopmentLevel developmentLevel, Cost cost, PropertyId propertyId) {
+    if (getBalance() < cost.getValue()) {
+      throw new RuntimeException("The balance is not enough to make the improvement");
     }
-    contract.sign(this.owner.getIdentity());
-    this.owner = owner;
-    assignOwnerEvent(owner.getIdentity().getValue(), this.getIdentity().getValue());
+    Upgrade upgrade = new Upgrade(improvement, developmentLevel,propertyId ,cost);
+    this.improvements.add(upgrade);
+    subtractBalance(cost.getValue());
+    madeImprovement(upgrade.getIdentity().getValue(), propertyId.getValue(), improvement.getValue(), cost.getValue());
   }
 
-  public void removeOwner( Contract contract){
-    if (this.owner != null){
-      this.owner = null;
-      contract.cancel();
-      removeOwnerEvent(this.owner.getIdentity().getValue(), this.getIdentity().getValue());
+  public void demolishImprovement(TypeImprovement improvement, DevelopmentLevel developmentLevel, Cost cost, PropertyId propertyId) {
+    if (developmentLevel.getValue() == 0) {
+      throw new RuntimeException("The property is already at its minimum level");
     }
-    else {
-      throw new IllegalArgumentException("The property does not have an owner");
-    }
+    Upgrade upgrade = new Upgrade(improvement, developmentLevel,propertyId ,cost);
+    this.improvements.remove(upgrade);
+    addBalance(cost.getValue());
+    demolishedImprovement(upgrade.getIdentity().getValue(), propertyId.getValue(), improvement.getValue(), cost.getValue());
   }
 
-    public void modifyOwner( Owner owner, Contract contract) {
-      if (this.owner != null) {
-        String previousOwnerId = this.owner.getIdentity().getValue();
-        this.owner = owner;
-        contract.sign(this.owner.getIdentity());
-        modifyOwnerEvent(this.owner.getIdentity().getValue(), this.getIdentity().getValue(), previousOwnerId);
-      } else {
-        throw new IllegalArgumentException("The property does not have an owner");
-      }
+  public void mortgage(OwnerId ownerId, Amount amount) {
+    if (mortgage.getIsMortgaged().getValue()) {
+      throw new RuntimeException("The property is already mortgaged");
     }
-      public void makeImprovement(){
-        if (this.owner != null){
-          if (this.owner.getIdentity().getValue().equals(this.contract.getParties().getOwnerId().getValue())){
-            if (this.improvements.size() < 5){
-              if (this.improvements.size() == 0){
-                if (this.owner.getBankAccountId().getBalance() >= 50){
-                  this.owner.getBankAccountId().withdraw(50);
-                  this.improvements.add(new Upgrade(TypeImprovementEnum.HOUSE, 50));
-                  makeImprovement(this.getIdentity().getValue(), TypeImprovementEnum.HOUSE, 50);
-                }
-                else {
-                  throw new IllegalArgumentException("The owner does not have enough money to make an improvement");
-                }
-              }
-              else {
-                if (this.owner.getBankAccountId().getBalance() >= 50){
-                  this.owner.getBankAccountId().withdraw(50);
-                  this.improvements.add(new Upgrade(TypeImprovementEnum.HOUSE, 50));
-                  makeImprovement(this.getIdentity().getValue(), TypeImprovementEnum.HOUSE, 50);
-                }
-                else {
-                  throw new IllegalArgumentException("The owner does not have enough money to make an improvement");
-                }
-              }
-            }
-            else {
-              throw new IllegalArgumentException("The property already has 5 improvements");
-            }
-          }
-          else {
-            throw new IllegalArgumentException("The owner is not the owner of the property");
-          }
-        }
-        else {
-          throw new IllegalArgumentException("The property does not have an owner");
-        }
-      }
+    mortgage.activate();
+    mortgaged(ownerId.getValue(), this.getIdentity().getValue(), amount.getValue());
+  }
 
-      public void demolishImprovement(){
-        if (this.owner != null){
-          if (this.owner.getIdentity().getValue().equals(this.contract.getParties().getOwnerId().getValue())){
-            if (this.improvements.size() > 0){
-              if (this.improvements.size() == 5){
-                this.owner.getBankAccountId().deposit(50);
-                this.improvements.remove(0);
-                demolishImprovement(this.getIdentity().getValue(), TypeImprovementEnum.HOUSE, 50);
-              }
-              else {
-                this.owner.getBankAccountId().deposit(50);
-                this.improvements.remove(0);
-                demolishImprovement(this.getIdentity().getValue(), TypeImprovementEnum.HOUSE, 50);
-              }
-            }
-            else {
-              throw new IllegalArgumentException("The property does not have any improvements");
-            }
-          }
-          else {
-            throw new IllegalArgumentException("The owner is not the owner of the property");
-          }
-        }
-        else {
-          throw new IllegalArgumentException("The property does not have an owner");
-        }
-      }
-  public void mortgage(double amount) {
-    validateOwnership();
-    validateSufficientFunds(amount * 0.5); // Requiere 50% del valor como garantía
+  public void cancelMortgage(OwnerId ownerId, Amount amount) {
+    if (!mortgage.getIsMortgaged().getValue()) {
+      throw new RuntimeException("The property is not mortgaged");
+    }
+    mortgage.cancel();
+    canceledMortgage(ownerId.getValue(), this.getIdentity().getValue(), amount.getValue());
+  }
 
-    this.mortgage = new Mortgage(
-      new MortgageId(),
-      amount,
-      LocalDate.now().plusYears(1),
-      IsMortgaged.of(true)
-    );
+  public void signContract(ContractId contractId, OwnerId ownerId, TypeContratEnum contractType, Rate rate, OwnerId tenantId) {
+    if (contract.getIsActive().getValue()) {
+      throw new RuntimeException("The contract is already signed");
+    }
+    contract.sign(ownerId);
+    signedContract(contractId.getValue(), this.getIdentity().getValue(), ownerId.getValue(), contractType, rate.getBase(), tenantId.getValue());
+  }
 
-    this.owner.getBankAccount().deposit(amount);
-    apply(new MortgageConstituted(
-      this.owner.getIdentity().value(),
-      this.getIdentity().value(),
-      amount
-    ));
+  public void finalizeContract(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount){
+    if (!contract.getIsActive().getValue()) {
+      throw new RuntimeException("The contract is already canceled");
+    }
+    contract.cancel();
+    finalizedContract(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount.getValue());
+  }
+
+  public void assignOwner(OwnerId ownerId) {
+    if ( owner.getIdentity().getValue() != null) {
+      throw new RuntimeException("The property already has an owner");
+    }
+    owner.acquireProperty(getIdentity());
+    assignedOwner(ownerId.getValue(), this.getIdentity().getValue());
+  }
+
+  public void removeOwner(OwnerId ownerId) {
+    if ( owner.getIdentity().getValue() == null) {
+      throw new RuntimeException("The property does not have an owner");
+    }
+    owner.sellProperty(getIdentity());
+    removedOwner(ownerId.getValue(), this.getIdentity().getValue());
+  }
+
+  public void modifyOwner(OwnerId ownerId, Owner previousOwner) {
+    if ( owner.getIdentity().getValue() == null) {
+      throw new RuntimeException("The property does not have an owner");
+    }
+    owner.transferProperty(getIdentity(), previousOwner);
+    modifiedOwner(ownerId.getValue(), this.getIdentity().getValue(), previousOwner.getIdentity().getValue());
+  }
+    // endregion
+    // region Private Methods
+  private Double getBalance() {
+    return 4.0;
+  }
+
+  private void addBalance(Double balance){
+  }
+
+  private void subtractBalance(Double balance){
   }
   // endregion
-
-  // region Private Methods
-  private void validateOwnership() {
-    if (this.owner == null) {
-      throw new IllegalStateException("Property has no owner");
-    }
-    if (!this.owner.getIdentity().equals(this.contract.getParties().getOwnerId())) {
-      throw new IllegalArgumentException("Action not allowed for non-owners");
-    }
-  }
-
-  private void validateSufficientFunds(double amount) {
-    if (this.owner.getBankAccount().getBalance() < amount) {
-      throw new IllegalArgumentException("Insufficient funds");
-    }
-  }
-
-  private void validateMaxImprovements() {
-    if (this.improvements.size() >= 5) {
-      throw new IllegalStateException("Maximum improvements reached");
-    }
-  }
-
-  private void validateExistingImprovements() {
-    if (this.improvements.isEmpty()) {
-      throw new IllegalStateException("No improvements to demolish");
-    }
-    // endregion
-  }
 }

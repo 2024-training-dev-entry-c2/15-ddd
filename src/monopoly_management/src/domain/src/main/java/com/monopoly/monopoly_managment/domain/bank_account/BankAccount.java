@@ -63,11 +63,11 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // endregion
 
   // region Domain Actions
-  public void registerTransaction(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount){
+  public void registeredTransaction(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount){
     apply(new CompletedTransaction(accountId, ownerId, transactionId, type, amount));
   }
 
-  public void cancelTransaction(String ownerId, String transactionId, TypeEnum type, Double amount){
+  public void canceledTransaction(String ownerId, String transactionId, TypeEnum type, Double amount){
     apply(new RejectedTransaction(ownerId, transactionId, type, amount));
   }
 
@@ -95,9 +95,9 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
         minusBalance(transaction);
       }
       this.transactions.add(transaction);
-      registerTransaction(this.getIdentity().getValue(), this.ownerId.getValue(), transaction.getIdentity().getValue(), transaction.getType().getValue(), transaction.getAmount().getValue());
+      registeredTransaction(this.getIdentity().getValue(), this.ownerId.getValue(), transaction.getIdentity().getValue(), transaction.getType().getValue(), transaction.getAmount().getValue());
     }catch (IllegalArgumentException e){
-      cancelTransaction(this.ownerId.getValue(), transaction.getIdentity().getValue(), transaction.getType().getValue(), transaction.getAmount().getValue());
+      canceledTransaction(this.ownerId.getValue(), transaction.getIdentity().getValue(), transaction.getType().getValue(), transaction.getAmount().getValue());
     }
   }
   // endregion
