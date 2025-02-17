@@ -22,6 +22,9 @@ import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
+import com.monopoly.shared.domain.generic.DomainEvent;
+
+import java.util.List;
 
 public class Property extends AggregateRoot<PropertyId> {
   private BankAccountId bankAccountId;
@@ -188,4 +191,11 @@ public class Property extends AggregateRoot<PropertyId> {
     }
   }
   // endregion
+
+  public static Property from(final String identity, final Contract contract, final Mortgage mortgage, final Owner owner, final Name name, final Price price, final ColorGroup colorGroup, final List<DomainEvent> domainEvents) {
+    Property property = new Property(PropertyId.of(identity), contract, mortgage, name, price, colorGroup);
+
+    domainEvents.forEach(property::apply);
+    return property;
+  }
 }

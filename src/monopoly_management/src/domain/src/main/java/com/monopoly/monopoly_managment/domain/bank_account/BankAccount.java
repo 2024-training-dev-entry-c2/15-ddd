@@ -11,8 +11,10 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
+
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
+import com.monopoly.shared.domain.generic.DomainEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,5 +104,11 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     }
   // endregion
 
+  public static BankAccount from(final String identity, final OwnerId ownerId, final Balance initialBalance, final List<Transaction> transactions, final List<DomainEvent> domainEvents) {
+    BankAccount bankAccount = new BankAccount(BankAccountId.of(identity), ownerId, initialBalance, transactions);
+
+    domainEvents.forEach(bankAccount::apply);
+    return bankAccount;
+  }
   }
 
