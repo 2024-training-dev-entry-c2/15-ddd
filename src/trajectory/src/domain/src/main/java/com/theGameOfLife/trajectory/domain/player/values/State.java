@@ -21,6 +21,10 @@ public class State implements IValueObject{
         ValidateUtils.validateIsNotEmpty(statePlayer, "el estado es requerido");
     }
 
+    public getStatePlayer() {
+        return statePlayer;
+    }
+
     public StatePlayerEnum getStatePlayer() {
         return statePlayer;
     }
