@@ -1,6 +1,7 @@
 package com.monopoly.monopoly_managment.domain.bank_account.entities;
 
 import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
+import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Destiny;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Origin;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
@@ -75,5 +76,8 @@ public class Transaction extends Entity<TransactionId> {
             ", destiny=" + destiny +
             ", origin=" + origin +
             '}';
+  }
+  public Boolean isEnoughFunds(Transaction transaction, Balance balance){
+    return balance.getValue() >= transaction.getAmount().getValue();
   }
 }

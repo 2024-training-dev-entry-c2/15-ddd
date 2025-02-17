@@ -150,103 +150,39 @@ public class Property extends AggregateRoot<PropertyId> {
   // endregion
 
   // region Public Methods
-  public void makeImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
-    validateSufficientBalance(cost);
-    validateMaximumDevelopmentLevel();
-    validateOwnerMonopoly();
-    improvements.build();
-    subtractBalance(cost.getValue());
-    madeImprovement(improvementId, propertyId, type, cost);
-  }
-
-  public void demolishImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
-    if (getDevelopmentLevel() == 0) {
-      throw new RuntimeException("The property is already at its minimum level");
-    }
-    improvements.downgrade();
-    addBalance(cost.getValue());
-    demolishedImprovement(improvementId, propertyId, type, cost);
-  }
-
-  public void mortgage(OwnerId ownerId, Amount amount) {
-    if (mortgage.getIsMortgaged().getValue()) {
-      throw new RuntimeException("The property is already mortgaged");
-    }
-    mortgage.activate();
-    mortgaged(ownerId, this.getIdentity(), amount);
-  }
-
-  public void cancelMortgage(OwnerId ownerId, Amount amount) {
-    if (!mortgage.getIsMortgaged().getValue()) {
-      throw new RuntimeException("The property is not mortgaged");
-    }
-    validateCancelMortgage();
-    mortgage.cancel();
-    canceledMortgage(ownerId, this.getIdentity(), amount);
-  }
-
-  public void assignOwner(OwnerId ownerId) {
-    if ( owner.getIdentity().getValue() != null) {
-      throw new RuntimeException("The property already has an owner");
-    }
-    owner.acquireProperty(getIdentity());
-    contract.sign(ownerId);
-    assignedOwner(ownerId, this.getIdentity()));
-  }
-
-  public void removeOwner(OwnerId ownerId) {
-    if ( owner.getIdentity().getValue() == null) {
-      throw new RuntimeException("The property does not have an owner");
-    }
-    contract.cancel();
-    owner.sellProperty(getIdentity());
-    removedOwner(ownerId, this.getIdentity());
-  }
-
-  public void modifyOwner(OwnerId ownerId, Owner previousOwner) {
-    if ( owner.getIdentity().getValue() == null) {
-      throw new RuntimeException("The property does not have an owner");
-    }
-    owner.transferProperty(getIdentity(), previousOwner);
-    contract.cancel();
-    previousOwner.sellProperty(getIdentity());
-    modifiedOwner(ownerId, this.getIdentity(), previousOwner.getIdentity());
-  }
-    // endregion
-    // region Private Methods
-  private Integer getDevelopmentLevel() {
+  public Integer getDevelopmentLevel() {
     return improvements.getDevelopmentLevel().getValue();
   }
 
-  private Double getBalance() {
+  public Double getBalance() {
     return 4.0;
   }
 
-  private void addBalance(Double balance){
+  public void addBalance(Double balance){
   }
 
-  private void subtractBalance(Double balance){
+  public void subtractBalance(Double balance){
   }
 
-  private void validateSufficientBalance(Cost cost) {
+  public void validateSufficientBalance(Cost cost) {
     if (getBalance() < cost.getValue()) {
       throw new RuntimeException("The balance is not enough to make the improvement");
     }
   }
 
-  private void validateCancelMortgage(){
+  public void validateCancelMortgage(){
     if (getBalance() < mortgage.calculateCancellationCost()){
       throw new RuntimeException(" Not enough balance ");
     }
   }
 
-  private void validateMaximumDevelopmentLevel() {
+  public void validateMaximumDevelopmentLevel() {
     if (getDevelopmentLevel() == 8) {
       throw new RuntimeException("The property is already at its maximum level");
     }
   }
 
-  private void validateOwnerMonopoly() {
+  public void validateOwnerMonopoly() {
     if (!owner.validateMonopoly(colorGroup)) {
       throw new RuntimeException("The owner does not have a monopoly of the color group");
     }

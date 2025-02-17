@@ -25,6 +25,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // region Constructors
   public BankAccount(OwnerId ownerId, Balance initialBalance) {
     super(new BankAccountId());
+    subscribe(new BankAccountHandler(this));
     this.ownerId = ownerId;
     this.balance = initialBalance;
     this.transactions = new ArrayList<>();
@@ -32,6 +33,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
 
   private BankAccount(BankAccountId identity, OwnerId ownerId, Balance initialBalance, List<Transaction> transactions) {
     super(identity);
+    subscribe(new BankAccountHandler(this));
     this.ownerId = ownerId;
     this.balance = initialBalance;
     this.transactions = transactions;
@@ -87,37 +89,12 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // endregion
 
   // region Public Methods
-  public void registerTransaction(Transaction transaction){
-    try{
-      validateFunds(transaction);
-      if (transaction.getType().getValue().equals(TypeEnum.DEPOSIT)){
-        plusBalance(transaction);
-      }
-      else if (transaction.getType().getValue().equals(TypeEnum.RETIREMENT)){
-        minusBalance(transaction);
-      }
-      this.transactions.add(transaction);
-      registeredTransaction(this.getIdentity(), this.ownerId, transaction.getIdentity(), transaction.getType().getValue(), transaction.getAmount());
-    }catch (IllegalArgumentException e){
-      canceledTransaction(this.ownerId, transaction.getIdentity(), transaction.getType().getValue(), transaction.getAmount());
-    }
-  }
-  // endregion
 
-  // region Private Methods
-  private void validateFunds(Transaction transaction){
-      if(balance.getValue() < transaction.getAmount().getValue()){
-        notValidatedFounds(this.getIdentity(), transaction.getAmount(), transaction.getType().getValue());
-        throw new IllegalArgumentException("Insufficient funds");
-      }
-      validatedFounds(this.getIdentity(), transaction.getAmount(), transaction.getType().getValue());
-  }
-
-  private void plusBalance(Transaction transaction){
+  public void plusBalance(Transaction transaction){
     this.balance = new Balance(this.balance.getValue() + transaction.getAmount().getValue());
   }
 
-  private void minusBalance(Transaction transaction){
+  public void minusBalance(Transaction transaction){
     this.balance = new Balance(this.balance.getValue() - transaction.getAmount().getValue());
   }
   // endregion
