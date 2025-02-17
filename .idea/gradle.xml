@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -8,10 +9,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/src" />
-            <option value="$PROJECT_DIR$/src/shared" />
-            <option value="$PROJECT_DIR$/src/shared/src" />
-            <option value="$PROJECT_DIR$/src/shared/src/domain" />
+            <option value="$PROJECT_DIR$/.src/shared/src/domain" />
+            <option value="$PROJECT_DIR$/.src/trajectory/src/domain" />
+            <option value="$PROJECT_DIR$/shared" />
+            <option value="$PROJECT_DIR$/trajectory" />
           </set>
         </option>
       </GradleProjectSettings>
