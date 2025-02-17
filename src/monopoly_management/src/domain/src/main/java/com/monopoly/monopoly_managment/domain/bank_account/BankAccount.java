@@ -57,7 +57,6 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   }
 
   public Balance getBalance() {
-    obtainedBalance(this.getIdentity(), balance.getValue());
     return balance;
   }
 
@@ -97,5 +96,11 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   public void minusBalance(Transaction transaction){
     this.balance = new Balance(this.balance.getValue() - transaction.getAmount().getValue());
   }
+
+  public void validateTransaction(Transaction transaction){
+    transaction.isEnoughFunds(transaction, this.balance);
+    }
   // endregion
-}
+
+  }
+

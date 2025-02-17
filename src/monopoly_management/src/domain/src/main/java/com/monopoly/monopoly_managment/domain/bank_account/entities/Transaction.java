@@ -6,6 +6,7 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.Destiny;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Origin;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Type;
+import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.Entity;
 import com.monopoly.shared.domain.utils.Validator;
 
@@ -77,7 +78,13 @@ public class Transaction extends Entity<TransactionId> {
             ", origin=" + origin +
             '}';
   }
-  public Boolean isEnoughFunds(Transaction transaction, Balance balance){
-    return balance.getValue() >= transaction.getAmount().getValue();
+  public void isEnoughFunds(Transaction transaction, Balance balance){
+    if (balance.getValue() < transaction.getAmount().getValue()){
+      throw new IllegalArgumentException("Insufficient funds");
+    }
+  }
+
+  public TypeEnum getTransactionType(){
+    return type.getValue();
   }
 }
