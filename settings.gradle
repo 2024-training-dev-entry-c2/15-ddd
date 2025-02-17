@@ -1,0 +1,15 @@
+pluginManagement {
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version '2.0.10'
+    }
+}
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+rootProject.name = 'building-clue'
+
+include ':shared:domain'
+include ':gameDynamics:domain'
+
+project(':shared:domain').projectDir = file('./src/shared/src/domain')
+project(':gameDynamics:domain').projectDir = file('./src/gameDynamics/src/domain')
