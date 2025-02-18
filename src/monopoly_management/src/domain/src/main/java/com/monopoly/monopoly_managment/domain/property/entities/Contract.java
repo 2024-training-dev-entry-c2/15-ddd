@@ -62,7 +62,7 @@ public class Contract extends Entity<ContractId> {
     this.parties = parties;
   }
 
-  public void sign(OwnerId ownerId){
+  public void sign(String ownerId){
     if (getIsActive().getValue()){
       throw new IllegalStateException("Contract is already signed");
     }

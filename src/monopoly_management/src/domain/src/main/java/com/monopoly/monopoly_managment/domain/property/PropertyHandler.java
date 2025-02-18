@@ -1,80 +1,104 @@
 package com.monopoly.monopoly_managment.domain.property;
 
-import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
-import com.monopoly.monopoly_managment.domain.property.entities.Owner;
-import com.monopoly.monopoly_managment.domain.property.values.Cost;
-import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
-import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
-import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
-import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
+import com.monopoly.monopoly_managment.domain.property.events.DemolishedImprovement;
+import com.monopoly.monopoly_managment.domain.property.events.MadeImprovement;
+import com.monopoly.monopoly_managment.domain.property.events.MortgageCanceled;
+import com.monopoly.monopoly_managment.domain.property.events.MortgageConstituted;
+import com.monopoly.monopoly_managment.domain.property.events.OwnerAssigned;
+import com.monopoly.monopoly_managment.domain.property.events.OwnerModified;
+import com.monopoly.monopoly_managment.domain.property.events.OwnerRemoved;
 import com.monopoly.shared.domain.generic.DomainActionsContainer;
+import com.monopoly.shared.domain.generic.DomainEvent;
+
+import java.util.function.Consumer;
 
 public class PropertyHandler extends DomainActionsContainer {
     private final Property property;
     public PropertyHandler(Property property) {
         this.property = property;
+        add(makeImprovement());
+        add(demolishImprovement());
+        add(mortgage());
+        add(cancelMortgage());
+        add(assignOwner());
+        add(removeOwner());
+        add(modifyOwner());
     }
 
-  public void makeImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
-    property.validateSufficientBalance(cost);
+  public Consumer<? extends DomainEvent> makeImprovement() {
+    return (MadeImprovement event) ->{
+      property.validateSufficientBalance(event.getCost());
     property.validateMaximumDevelopmentLevel();
     property.validateOwnerMonopoly();
     property.getImprovements().build();
-    property.subtractBalance(cost.getValue());
-    property.madeImprovement(improvementId, propertyId, type, cost);
+    property.subtractBalance(event.getCost());
+    };
   }
 
-  public void demolishImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
-    if (property.getDevelopmentLevel() == 0) {
+  public Consumer<? extends DomainEvent> demolishImprovement() {
+    return (DemolishedImprovement event) -> {
+      if (property.getDevelopmentLevel() == 0) {
       throw new RuntimeException("The property is already at its minimum level");
     }
     property.getImprovements().downgrade();
-    property.addBalance(cost.getValue());
-    property.demolishedImprovement(improvementId, propertyId, type, cost);
+    property.addBalance(event.getCost());
+    };
   }
 
-  public void mortgage(OwnerId ownerId, Amount amount) {
-    if (property.getMortgage().getIsMortgaged().getValue()) {
+  public Consumer<? extends DomainEvent> mortgage() {
+    return (MortgageConstituted event) -> {
+      if (property.getMortgage().getIsMortgaged().getValue()) {
       throw new RuntimeException("The property is already mortgaged");
     }
     property.getMortgage().activate();
-    property.mortgaged(ownerId, property.getIdentity(), amount);
+    property.addBalance(event.getAmount());
+    };
   }
 
-  public void cancelMortgage(OwnerId ownerId, Amount amount) {
-    if (!property.getMortgage().getIsMortgaged().getValue()) {
+  public Consumer<? extends DomainEvent> cancelMortgage() {
+    return (MortgageCanceled event) -> {
+      if (!property.getMortgage().getIsMortgaged().getValue()) {
       throw new RuntimeException("The property is not mortgaged");
     }
     property.validateCancelMortgage();
     property.getMortgage().cancel();
-    property.canceledMortgage(ownerId, property.getIdentity(), amount);
+    property.subtractBalance(event.getAmount());
+  };}
+
+  public Consumer<? extends DomainEvent> assignOwner() {
+    return (OwnerAssigned event) -> {
+      if (property.getOwner().getIdentity().getValue() != null) {
+        throw new RuntimeException("The property already has an owner");
+      }
+      property.getOwner().acquireProperty(property.getIdentity());
+      property.getContract().sign(event.getOwnerId());
+    };
   }
 
-  public void assignOwner(OwnerId ownerId) {
-    if ( property.getOwner().getIdentity().getValue() != null) {
-      throw new RuntimeException("The property already has an owner");
-    }
-    property.getOwner().acquireProperty(property.getIdentity());
-    property.getContract().sign(ownerId);
-    property.assignedOwner(ownerId, property.getIdentity());
-  }
-
-  public void removeOwner(OwnerId ownerId) {
-    if ( property.getOwner().getIdentity().getValue() == null) {
+  public Consumer<? extends DomainEvent> removeOwner() {
+    return (OwnerRemoved event) -> {
+      if ( property.getOwner().getIdentity().getValue().equals(event.getPropertyId())) {
+        if ( property.getOwner().getIdentity().getValue() == null) {
       throw new RuntimeException("The property does not have an owner");
+        }
+    property.getOwner().transferProperty(property.getIdentity(), property.getOwner());
     }
     property.getContract().cancel();
     property.getOwner().sellProperty(property.getIdentity());
-    property.removedOwner(ownerId, property.getIdentity());
+    property.addBalance(property.getPrice().getValue());
+    };
   }
 
-  public void modifyOwner(OwnerId ownerId, Owner previousOwner) {
-    if ( property.getOwner().getIdentity().getValue() == null) {
+  public Consumer<? extends DomainEvent> modifyOwner() {
+    return (OwnerModified event) -> {
+      if ( property.getOwner().getIdentity().getValue().equals( event.getPreviousOwnerId())) {
+        if ( property.getOwner().getIdentity().getValue() == null) {
       throw new RuntimeException("The property does not have an owner");
+        }
     }
-    property.getOwner().transferProperty(property.getIdentity(), previousOwner);
+    property.getOwner().transferProperty(property.getIdentity(), property.getOwnerById(event.getOwnerId()));
     property.getContract().cancel();
-    previousOwner.sellProperty(property.getIdentity());
-    property.modifiedOwner(ownerId, property.getIdentity(), previousOwner.getIdentity());
-  }
+    property.getOwnerById(event.getOwnerId()).sellProperty(property.getIdentity());
+  };
+}
 }

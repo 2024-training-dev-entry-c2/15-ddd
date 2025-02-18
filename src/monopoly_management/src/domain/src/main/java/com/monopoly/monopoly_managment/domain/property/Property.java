@@ -13,12 +13,15 @@ import com.monopoly.monopoly_managment.domain.property.events.MortgageConstitute
 import com.monopoly.monopoly_managment.domain.property.events.OwnerAssigned;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerModified;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerRemoved;
+import com.monopoly.monopoly_managment.domain.property.values.Alias;
 import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
 import com.monopoly.monopoly_managment.domain.property.values.Cost;
 import com.monopoly.monopoly_managment.domain.property.values.Name;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
+import com.monopoly.monopoly_managment.domain.property.values.Portfolio;
 import com.monopoly.monopoly_managment.domain.property.values.Price;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
+import com.monopoly.monopoly_managment.domain.property.values.Token;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
@@ -39,6 +42,7 @@ public class Property extends AggregateRoot<PropertyId> {
   // region Constructors
   private Property(PropertyId identity, Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
     super(identity);
+    subscribe(new PropertyHandler(this));
     this.contract = contract;
     this.mortgage = mortgage;
     this.name = name;
@@ -48,6 +52,7 @@ public class Property extends AggregateRoot<PropertyId> {
 
   public Property(Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
     super(new PropertyId());
+    subscribe(new PropertyHandler(this));
     this.contract = contract;
     this.mortgage = mortgage;
     this.name = name;
@@ -123,8 +128,8 @@ public class Property extends AggregateRoot<PropertyId> {
   // endregion
 
   // region Domain Actions
-  public void madeImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
-    apply(new MadeImprovement(improvementId.getValue(), propertyId.getValue(), type, cost.getValue()));
+  public void madeImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
+    apply(new MadeImprovement(improvementId, propertyId, type, cost));
   }
 
   public void demolishedImprovement(UpgradeId improvementId, PropertyId propertyId, TypeImprovementEnum type, Cost cost) {
@@ -167,8 +172,8 @@ public class Property extends AggregateRoot<PropertyId> {
   public void subtractBalance(Double balance){
   }
 
-  public void validateSufficientBalance(Cost cost) {
-    if (getBalance() < cost.getValue()) {
+  public void validateSufficientBalance(Double cost) {
+    if (getBalance() < cost) {
       throw new RuntimeException("The balance is not enough to make the improvement");
     }
   }
@@ -190,6 +195,10 @@ public class Property extends AggregateRoot<PropertyId> {
       throw new RuntimeException("The owner does not have a monopoly of the color group");
     }
   }
+
+  public Owner getOwnerById(final String ownerId) {
+    return new Owner(Alias.of("alias"), Token.of("example"), Portfolio.of(List.of("1")), null);
+  }
   // endregion
 
   public static Property from(final String identity, final Contract contract, final Mortgage mortgage, final Owner owner, final Name name, final Price price, final ColorGroup colorGroup, final List<DomainEvent> domainEvents) {
@@ -198,4 +207,5 @@ public class Property extends AggregateRoot<PropertyId> {
     domainEvents.forEach(property::apply);
     return property;
   }
+
 }

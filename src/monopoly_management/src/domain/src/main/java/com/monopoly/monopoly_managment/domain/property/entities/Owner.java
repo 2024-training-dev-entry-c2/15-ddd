@@ -87,7 +87,7 @@ public class Owner extends Entity<OwnerId> {
   }
 
   public Boolean validateMonopoly(ColorGroup group) {
-    return portfolio.getPropertiesIds().stream().filter(propertyId -> Property.of(propertyId).getGroup().equals(group)).count() == getRealGroupSize(group);
+    return portfolio.getPropertiesIds().stream().filter(propertyId -> Property.of(propertyId).getGroup().equals(group)).count() == getRealGroupSize(group.getValue());
   }
 
   private void validatePropertyOwnership(PropertyId property) {

@@ -3,7 +3,6 @@ package com.monopoly.monopoly_managment.domain.bank_account;
 import com.monopoly.monopoly_managment.domain.bank_account.entities.Transaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.CompletedTransaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.NotValidatedFounds;
-import com.monopoly.monopoly_managment.domain.bank_account.events.ObtainedBalance;
 import com.monopoly.monopoly_managment.domain.bank_account.events.RejectedTransaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.ValidatedFounds;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
@@ -68,24 +67,20 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // endregion
 
   // region Domain Actions
-  public void registeredTransaction(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount){
-    apply(new CompletedTransaction(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount.getValue()));
+  public void registeredTransaction(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount, String origin, String destiny){
+    apply(new CompletedTransaction(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount.getValue(), origin, destiny));
   }
 
-  public void canceledTransaction(OwnerId ownerId, TransactionId transactionId, TypeEnum type, Amount amount){
-    apply(new RejectedTransaction(ownerId.getValue(), transactionId.getValue(), type, amount.getValue()));
+  public void canceledTransaction(OwnerId ownerId, String transactionId, TypeEnum type, Double amount, String origin, String destiny){
+    apply(new RejectedTransaction(ownerId.getValue(), transactionId, type, amount, origin, destiny));
   }
 
-  public void obtainedBalance(BankAccountId accountId, Double amount){
-    apply(new ObtainedBalance(accountId.getValue(), amount));
+  public void validatedFounds(BankAccountId accountId, Double amount, TypeEnum type){
+    apply(new ValidatedFounds(accountId.getValue(), amount, type));
   }
 
-  public void validatedFounds(BankAccountId accountId, Amount amount, TypeEnum type){
-    apply(new ValidatedFounds(accountId.getValue(), amount.getValue(), type));
-  }
-
-  public void notValidatedFounds(BankAccountId accountId, Amount amount, TypeEnum type){
-    apply(new NotValidatedFounds(accountId.getValue(), amount.getValue(), type));
+  public void notValidatedFounds(BankAccountId accountId, Double amount, TypeEnum type){
+    apply(new NotValidatedFounds(accountId.getValue(), amount, type));
   }
   // endregion
 
