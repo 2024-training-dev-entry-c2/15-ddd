@@ -10,12 +10,12 @@ import com.buildingclue.gameDynamics.domain.incident.events.LocationDetermined;
 import com.buildingclue.gameDynamics.domain.incident.events.SuspectEliminated;
 import com.buildingclue.gameDynamics.domain.incident.events.SuspectIdentified;
 import com.buildingclue.gameDynamics.domain.incident.events.WeaponIdentified;
+import com.buildingclue.gameDynamics.domain.incident.values.Clue;
 import com.buildingclue.gameDynamics.domain.incident.values.IncidentId;
 import com.buildingclue.gameDynamics.domain.incident.values.StatusCase;
 import com.buildingclue.shared.domain.constants.States;
 import com.buildingclue.shared.domain.generic.AggregateRoot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Incident extends AggregateRoot<IncidentId> {
@@ -24,20 +24,17 @@ public class Incident extends AggregateRoot<IncidentId> {
   private Suspect suspect;
   private Weapon weapon;
   private Location location;
-  private List<String> clues;
+  private List<Clue> clues;
 
   public Incident() {
     super(new IncidentId());
     this.status = StatusCase.of(States.OPEN);
+    subscribe(new IncidentHandler(this));
   }
 
   private Incident(IncidentId id, StatusCase status, Suspect suspect, Weapon weapon, Location location, List<String> clues) {
     super(id);
-    this.status = status;
-    this.suspect = suspect;
-    this.weapon = weapon;
-    this.location = location;
-    this.clues = new ArrayList<>();
+    subscribe(new IncidentHandler(this));
     apply(new InvestigationStarted(id.getValue()));
   }
 
@@ -73,41 +70,35 @@ public class Incident extends AggregateRoot<IncidentId> {
     this.location = location;
   }
 
-  public List<String> getClues() {
+  public List<Clue> getClues() {
     return clues;
   }
 
-  public void setClues(List<String> clues) {
+  public void setClues(List<Clue> clues) {
     this.clues = clues;
   }
 
-  public void addClue(String clue) {
-    clues.add(clue);
-    apply(new ClueDiscovered(this.getIdentity().getValue(), clue));
+  public void addClue(Clue clue) {
+    apply(new ClueDiscovered(this.getIdentity().getValue(), clue.getValue()));
   }
 
   public void identifySuspect(Suspect suspect) {
-    this.suspect = suspect;
     apply(new SuspectIdentified(this.getIdentity().getValue(), suspect.getName().getValue()));
   }
 
   public void identifyWeapon(Weapon weapon) {
-    this.weapon = weapon;
     apply(new WeaponIdentified(this.getIdentity().getValue(), weapon.getName().getValue()));
   }
 
   public void determineLocation(Location location) {
-    this.location = location;
     apply(new LocationDetermined(this.getIdentity().getValue(), location.getName().getValue()));
   }
 
   public void eliminateSuspect() {
     apply(new SuspectEliminated(this.getIdentity().getValue(), this.suspect.getName().getValue()));
-    this.suspect = null;
   }
 
   public void solveCase() {
-    this.status = StatusCase.of(States.SOLVED);
     apply(new CaseSolved(this.getIdentity().getValue()));
   }
 }

@@ -28,15 +28,12 @@ public class Game extends AggregateRoot<GameId> {
   public Game() {
     super(new GameId());
     this.state = GameState.of(States.WAITING);
+    subscribe(new GameHandler(this));
   }
 
   private Game(GameId id, GameState state, Board board, List<Rule> rules, List<Turn> turns, NumberPlayers players) {
     super(id);
-    this.state = state;
-    this.board = board;
-    this.rules = rules;
-    this.turns = turns;
-    this.players = players;
+    subscribe(new GameHandler(this));
     apply(new GameStarted(id.getValue()));
   }
 
