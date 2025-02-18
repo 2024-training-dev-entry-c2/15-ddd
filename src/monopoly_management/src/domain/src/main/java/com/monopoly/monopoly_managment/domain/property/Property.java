@@ -40,24 +40,15 @@ public class Property extends AggregateRoot<PropertyId> {
   private ColorGroup colorGroup;
 
   // region Constructors
-  private Property(PropertyId identity, Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
+  private Property(PropertyId identity ) {
     super(identity);
     subscribe(new PropertyHandler(this));
-    this.contract = contract;
-    this.mortgage = mortgage;
-    this.name = name;
-    this.price = price;
-    this.colorGroup = colorGroup;
+
   }
 
-  public Property(Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
+  public Property() {
     super(new PropertyId());
     subscribe(new PropertyHandler(this));
-    this.contract = contract;
-    this.mortgage = mortgage;
-    this.name = name;
-    this.price = price;
-    this.colorGroup = colorGroup;
   }
   // endregion
 
@@ -201,8 +192,8 @@ public class Property extends AggregateRoot<PropertyId> {
   }
   // endregion
 
-  public static Property from(final String identity, final Contract contract, final Mortgage mortgage, final Owner owner, final Name name, final Price price, final ColorGroup colorGroup, final List<DomainEvent> domainEvents) {
-    Property property = new Property(PropertyId.of(identity), contract, mortgage, name, price, colorGroup);
+  public static Property from(final String identity,final List<DomainEvent> domainEvents) {
+    Property property = new Property(PropertyId.of(identity));
 
     domainEvents.forEach(property::apply);
     return property;

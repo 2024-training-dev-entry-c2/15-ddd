@@ -24,20 +24,16 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   private Balance balance;
 
   // region Constructors
-  public BankAccount(OwnerId ownerId, Balance initialBalance) {
+  public BankAccount() {
     super(new BankAccountId());
     subscribe(new BankAccountHandler(this));
-    this.ownerId = ownerId;
-    this.balance = initialBalance;
-    this.transactions = new ArrayList<>();
+
   }
 
-  private BankAccount(BankAccountId identity, OwnerId ownerId, Balance initialBalance, List<Transaction> transactions) {
+  private BankAccount(BankAccountId identity) {
     super(identity);
     subscribe(new BankAccountHandler(this));
-    this.ownerId = ownerId;
-    this.balance = initialBalance;
-    this.transactions = transactions;
+
   }
   // endregion
   // region Getters and Setters
@@ -100,7 +96,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // endregion
 
   public static BankAccount from(final String identity, final OwnerId ownerId, final Balance initialBalance, final List<Transaction> transactions, final List<DomainEvent> domainEvents) {
-    BankAccount bankAccount = new BankAccount(BankAccountId.of(identity), ownerId, initialBalance, transactions);
+    BankAccount bankAccount = new BankAccount(BankAccountId.of(identity));
 
     domainEvents.forEach(bankAccount::apply);
     return bankAccount;
