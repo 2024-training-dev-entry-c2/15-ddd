@@ -5,67 +5,110 @@ import com.theGameOfLife.trajectory.domain.cards.entities.Decision;
 import com.theGameOfLife.trajectory.domain.cards.entities.Reward;
 import com.theGameOfLife.trajectory.domain.cards.entities.TypeEvent;
 import com.theGameOfLife.trajectory.domain.cards.entities.StatedEvent;
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cards extends AggregateRoot<CardId>{
 
     private Consequence consequence;
     private Decision decision;
-    private Reward reward;
+    private List<Reward> rewards = new ArrayList<>();
     private TypeEvent type;
     private StatedEvent state;
 
-    public Cards(){
+    public Cards() {
         super(new CardId());
+        subscribe(new CardsHandler(this));
+        apply(new CancelledEvent(id, type, state));
+        apply(new GroupImpact(type, state));
+        apply(new IsRewarded(id, nameReward, descriptionReward, state, type, value));
+        apply(new TakenDecision(id, nameDecision, descriptionDecision, state, type, value));
     }
 
-    private Cards(CardId Identity){
+    private Cards(CardsId Identity){
         super(Identity);
+        subscribe(new CardsHandler(this));
     }
 
-    getConsequence(){
+    public Consequence getConsequence() {
         return consequence;
     }
 
-    getDecision(){
-        return decision;
-    }
-
-    getReward(){
-        return reward;
-    }
-
-    getType(){
-        return type;
-    }
-
-    getState(){
-        return state;
-    }
-
-    setConsequence(Consequence consequence){
+    public void setConsequence(Consequence consequence) {
         this.consequence = consequence;
     }
 
-    setDecision(Decision decision){
+    public Decision getDecision() {
+        return decision;
+    }
+
+    public void setDecision(Decision decision) {
         this.decision = decision;
     }
 
-    setReward(Reward reward){
-        this.reward = reward;
+    public List<Reward> getRewards() {
+        return rewards;
     }
 
-    setType(TypeEvent type){
+    public void setRewards(List<Reward> rewards) {
+        this.rewards = rewards;
+    }
+
+    public TypeEvent getType() {
+        return type;
+    }
+
+    public void setType(TypeEvent type) {
         this.type = type;
     }
 
-    setState(StatedEvent state){
+    public StatedEvent getState() {
+        return state;
+    }
+
+    public void setState(StatedEvent state) {
         this.state = state;
     }
 
-    //region actions
+    public void validateStateOfCard(String id) {
+        if (id.equals(this.id.getId()) && this.state.getState() == StatedEvent.COMPLETED) {
+            thorw new IllegalArgumentException("Estado de la tarjeta no puede ser COMPLETADO");
+        }
+    }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //region actions
     public void canceledEvent(String id, TypeEvent type, StateEvent state){
         apply(new CancelledEvent(id, type, state));
     }

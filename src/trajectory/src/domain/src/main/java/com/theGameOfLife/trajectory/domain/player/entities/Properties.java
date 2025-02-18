@@ -4,7 +4,7 @@ import com.theGameOfLife.trajectory.domain.player.values.PlayerId;
 import com.theGameOfLife.trajectory.domain.player.values.TypePropertyEnum;
 import com.theGameOfLife.trajectory.domain.player.values.ValueProperty;
 import com.theGameOfLife.shared.domain.generic.Identity;
-public class Properties extends Identity<PlayerId>{
+public class Properties extends Entity<PlayerId>{
     private typeProperty type;
     private valueProperty value;
     private Address address;

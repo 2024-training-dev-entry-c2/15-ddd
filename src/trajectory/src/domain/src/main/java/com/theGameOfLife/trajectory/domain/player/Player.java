@@ -11,13 +11,14 @@ import com.theGameOfLife.trajectory.domain.player.events.UpdateProfession;
 import com.theGameOfLife.trajectory.domain.player.values.Address;
 import com.theGameOfLife.trajectory.domain.player.values.BoardPosition;
 import com.theGameOfLife.trajectory.domain.player.values.Children;
+import com.theGameOfLife.shared.domain.generic.DomainEvent.subscribe;
 import com.theGameOfLife.shared.domain.generic.AggregateRoot;
 
 public class Player extends AggregateRoot<PlayerId>{
 
     private UniversityCareer career;
-    private Family family;
-    private Properties propertys;
+    private List<Family> family = new ArrayList<>();
+    private List<Properties> properties = new ArrayList<>();
     private Name name;
     private Diner money;
     private StateHealth stateHealth;
@@ -26,84 +27,106 @@ public class Player extends AggregateRoot<PlayerId>{
 
     public Player(){
         super(new PlayerId());
+        subscribe(new PlayerHandler(this));
+        apply(new AcquiredProperty());
+        apply(new LoseMoney(money));
+        apply(new MakeyMoney(money));
+        apply(new PropertySold(String id, Address address, Diner value, TypeProperty type))
+        apply(new StateChange(state));
     }
 
     private Player(PlayerId Identity){
         super(Identity);
+        subscribe(new PlayerHandler(this));
     }
 
-    getName(){
+    public UniversityCareer getCareer() {
+        return career;
+    }
+
+    public void setCareer(UniversityCareer career) {
+        this.career = career;
+    }
+
+    public List<Family> getFamily() {
+        return family;
+    }
+
+    public void setFamily(Family familia) {
+        this.family.add(familia)
+    }
+
+    public Name getName() {
         return name;
     }
 
-    getDiner(){
-        return money;
-    }
-
-    getStateHealth(){
-        return stateHealth;
-    }
-
-    getBoardPosition(){
-        return boardPosition;
-    }
-
-    getState(){
-        return state;
-    }
-
-    setName(Name name){
+    public void setName(Name name) {
         this.name = name;
     }
 
-    setDiner(Diner money){
+    public Diner getMoney() {
+        return money;
+    }
+
+    public void setMoney(Diner money) {
         this.money = money;
     }
 
-    setStateHealth(StateHealth stateHealth){
+    public StateHealth getStateHealth() {
+        return stateHealth;
+    }
+
+    public void setStateHealth(StateHealth stateHealth) {
         this.stateHealth = stateHealth;
     }
 
-    setBoardPosition(BoardPosition boardPosition){
+    public BoardPosition getBoardPosition() {
+        return boardPosition;
+    }
+
+    public void setBoardPosition(BoardPosition boardPosition) {
         this.boardPosition = boardPosition;
     }
 
-    setState(State state){
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
         this.state = state;
     }
 
-    //region actions
-
-    public void acquireProperty(Address address, ValueProperty value, TypeProperty type){
-        apply(new AcquiredProperty(address, value, type));
+    public List<Properties> getProperties(){
+        return properties;
     }
 
-    public void loseMoney(Diner amount){
-        apply(new LoseMoney(amount));
+    public void setProperty(Properties property) {
+        this.properties.add(property);
     }
 
-    public void makeMoney(Diner amount, Salary salary){
-        apply(new MakeyMoney(amount, salary));
+    public setDiner(Diner money) {
+
+            this.money = money;
+        }
     }
 
-    public void propertySold(String id, Address address, Diner value, TypeProperty type){
-        apply(new PropertySold(id, address, value, type));
+    public void disminurDinero(Diner amount) {
+        if (this.money.getAmount() < 0) {
+            throw new IllegalArgumentException("Fondos insuficientes");
+        }
     }
 
-    public void stateChange(StatePlayerEnum state){
-        apply(new StateChange(state));
+    public void validateAmount(Diner amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("No se puede agregar un monto negativo.");
+        }
     }
 
-    public void updateFamily(Children children, Coupe coupe){
-        apply(new UpdateFamily(children, coupe));
+    public encontrarPropiedad(String id) {
+    Properties propertyToRemove = getProperties().stream()
+            .filter(prop -> prop.getId().equals(event.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Propiedad no encontrada"));
     }
-
-    public void updateProfession(String id, Name name, NameProfession nameProfession, EducationalLevel educationalLevel, Salary salary){
-        apply(new UpdateProfession(id, name, nameProfession, educationalLevel, salary));
-    }
-
-    //endregion
-
-
 
 }

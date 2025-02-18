@@ -6,7 +6,7 @@ import com.theGameOfLife.trajectory.domain.player.values.Salary;
 import com.theGameOfLife.trajectory.domain.player.values.StatusLevelEnum;
 import com.theGameOfLife.shared.domain.generic.Identity;
 
-public class UniversityCareer extends Identity<PlayerId>{
+public class UniversityCareer extends Entity<PlayerId>{
     private Name name;
     private EducationalLevel educationalLevel;
     private Salary salary;

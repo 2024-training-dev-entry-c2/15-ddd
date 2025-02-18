@@ -6,7 +6,7 @@ import com.theGameOfLife.trajectory.domain.cards.values.TypeEventEnum;
 import com.theGameOfLife.trajectory.domain.cards.values.ValueConsequence;
 import com.theGameOfLife.shared.domain.generic.Identity;
 
-public class Consequence extends Identity<CardId>{
+public class Consequence extends Entity<CardId>{
 
     private NameConsequence nameConsequence;
     private DescriptionConsequence descriptionConsequence;
@@ -35,12 +35,18 @@ public class Consequence extends Identity<CardId>{
                 type.setTypeEvent(TypeEventEnum.GROUP_IMPACT);
     }
 
-
     public  consecuenciaIndividual() {
         type.getTypeEvent() == TypeEventEnum.INDIVIDUAL_IMPACT ?
                 value.setValue(value.getValue() - 50) :
                 value.setValue(value.getValue() + 100);
     }
+
+    private void applyImpactToGroup(GroupImpact grupo) {
+        grupo.getValue().setValue(grupo.getValue().getValue() - 50);
+        System.out.println("Aplicando cambio de dinero al grupo");
+    }
+
+
 
 
 

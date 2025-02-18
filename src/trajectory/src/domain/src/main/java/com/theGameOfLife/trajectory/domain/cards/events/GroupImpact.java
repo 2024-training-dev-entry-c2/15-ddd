@@ -7,7 +7,7 @@ import com.theGameOfLife.shared.domain.generic.DomainEvent;
 public class GroupImpact extends DomainEvent{
     private final TypeEvent type;
     private final StateEvent state;
-    private final ValueConsequence value;
+    private final String value;
 
     public GroupImpact(TypeEvent type, StateEvent state, ValueConsequence value){
         super(this.NameEventsListEnum.Group_Impact.name());

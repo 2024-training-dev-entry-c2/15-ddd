@@ -2,13 +2,13 @@ package com.theGameOfLife.trajectory.domain.cards.events;
 
 public class UpdateReward extends DomainEvent{
     private final String id;
-    private final NameReward nameReward;
-    private final DescriptionReward descriptionReward;
+    private final String nameReward;
+    private final String descriptionReward;
     private final StatedEvent state;
     private final TypeEvent type;
     private final QuantityReward quantityReward;
 
-    public UpdateReward(String id, NameReward nameReward, DescriptionReward descriptionReward, StatedEvent state, TypeEvent type, QuantityReward quantityReward){
+    public UpdateReward(String id, String nameReward, String descriptionReward, StatedEvent state, TypeEvent type, QuantityReward quantityReward){
         super(this.NameEventsListEnum.Update_Reward.name());
         this.id = id;
         this.nameReward = nameReward;

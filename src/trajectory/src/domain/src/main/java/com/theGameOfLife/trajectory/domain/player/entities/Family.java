@@ -5,7 +5,7 @@ import com.theGameOfLife.trajectory.domain.player.values.Children;
 package com.theGameOfLife.shared.domain.generic;
 
 
-public class Family extends Identity<PlayerId>{
+public class Family extends Entity<PlayerId>{
     private Couple couple;
     private Children children;
 

@@ -9,13 +9,13 @@ import com.theGameOfLife.shared.domain.generic.DomainEvent;
 public class TakenDecision extends DomainEvent{
 
     private final String id;
-    private final NameDecision nameDecision;
-    private final DescriptionDecision descriptionDecision;
+    private final String nameDecision;
+    private final String descriptionDecision;
     private final StatedEvent state;
     private final TypeEvent type;
     private final ValueDecision value;
 
-    public TakenDecision(String id, NameDecision nameDecision, DescriptionDecision descriptionDecision, StatedEvent state, TypeEvent type, ValueDecision value){
+    public TakenDecision(String id, String nameDecision, String descriptionDecision, StatedEvent state, TypeEvent type, ValueDecision value){
         super(this.NameEventsListEnum.Taken_Decision.name());
         this.id = id;
         this.nameDecision = nameDecision;

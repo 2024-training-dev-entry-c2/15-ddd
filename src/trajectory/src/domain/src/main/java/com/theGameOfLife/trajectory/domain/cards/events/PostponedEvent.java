@@ -6,10 +6,10 @@ import com.theGameOfLife.shared.domain.generic.DomainEvent;
 public class PostponedEvent extends DomainEvent{
 
     private final String id;
-    private final StateEvent state;
+    private final String state;
     private final TypeEvent type;
 
-    public PostponedEvent(String id, StateEvent state, TypeEvent type){
+    public PostponedEvent(String id, String state, TypeEvent type){
         super(this.NameEventsListEnum.Postponed_Event.name());
         this.id = id;
         this.state = state;
@@ -20,7 +20,7 @@ public class PostponedEvent extends DomainEvent{
         return id;
     }
 
-    public StateEvent getState() {
+    public String getState() {
         return state;
     }
 
