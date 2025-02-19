@@ -16,6 +16,7 @@ import com.buildingclue.gameDynamics.domain.incident.values.StatusCase;
 import com.buildingclue.shared.domain.constants.States;
 import com.buildingclue.shared.domain.generic.AggregateRoot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Incident extends AggregateRoot<IncidentId> {
@@ -29,6 +30,7 @@ public class Incident extends AggregateRoot<IncidentId> {
   public Incident() {
     super(new IncidentId());
     this.status = StatusCase.of(States.OPEN);
+    this.clues = new ArrayList<>();
     subscribe(new IncidentHandler(this));
   }
 
@@ -36,6 +38,10 @@ public class Incident extends AggregateRoot<IncidentId> {
     super(id);
     subscribe(new IncidentHandler(this));
     apply(new InvestigationStarted(id.getValue()));
+  }
+
+  public static Incident createWithParams(IncidentId id, StatusCase status, Suspect suspect, Weapon weapon, Location location, List<String> clues) {
+    return new Incident(id, status, suspect, weapon, location, clues);
   }
 
   public StatusCase getStatus() {
@@ -99,6 +105,11 @@ public class Incident extends AggregateRoot<IncidentId> {
   }
 
   public void solveCase() {
-    apply(new CaseSolved(this.getIdentity().getValue()));
+    if (!this.status.equals(StatusCase.of(States.SOLVED))) {
+      apply(new CaseSolved(this.getIdentity().getValue()));
+      this.status = StatusCase.of(States.SOLVED);
+    }
   }
+
+
 }

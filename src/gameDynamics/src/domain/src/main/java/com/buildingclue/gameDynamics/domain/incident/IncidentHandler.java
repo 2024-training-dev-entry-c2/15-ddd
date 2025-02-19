@@ -4,6 +4,8 @@ import com.buildingclue.gameDynamics.domain.incident.events.CaseSolved;
 import com.buildingclue.gameDynamics.domain.incident.events.ClueDiscovered;
 import com.buildingclue.gameDynamics.domain.incident.events.SuspectEliminated;
 import com.buildingclue.gameDynamics.domain.incident.values.Clue;
+import com.buildingclue.gameDynamics.domain.incident.values.StatusCase;
+import com.buildingclue.shared.domain.constants.States;
 import com.buildingclue.shared.domain.generic.DomainActionsContainer;
 import com.buildingclue.shared.domain.generic.DomainEvent;
 
@@ -31,9 +33,7 @@ public class IncidentHandler extends DomainActionsContainer {
   private Consumer<? super DomainEvent> handleCaseSolved(Incident incident) {
     return event -> {
       if (event instanceof CaseSolved) {
-        if (incident.getSuspect() != null && incident.getWeapon() != null && incident.getLocation() != null) {
-          incident.solveCase();
-        }
+        incident.setStatus(StatusCase.of(States.SOLVED));
       }
     };
   }
@@ -41,10 +41,11 @@ public class IncidentHandler extends DomainActionsContainer {
   private Consumer<? super DomainEvent> handleSuspectEliminated(Incident incident) {
     return event -> {
       if (event instanceof SuspectEliminated) {
-        if (incident.getSuspect() != null) {
-          incident.eliminateSuspect();
-        }
+        System.out.println("Sospechoso eliminado: " + ((SuspectEliminated) event).getSuspectName());
+
+        incident.setSuspect(null);
       }
     };
   }
+
 }
