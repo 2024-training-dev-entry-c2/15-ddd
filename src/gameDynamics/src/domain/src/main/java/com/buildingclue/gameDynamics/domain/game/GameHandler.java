@@ -35,7 +35,7 @@ public class GameHandler extends DomainActionsContainer {
   private Consumer<? super DomainEvent> handleGameOver(Game game) {
     return event -> {
       if (event instanceof GameOver) {
-        game.setState(GameState.of(States.IN_PROGRESS));
+        game.setState(GameState.of(States.FINISHED));
       }
     };
   }
@@ -43,35 +43,43 @@ public class GameHandler extends DomainActionsContainer {
   private Consumer<? super DomainEvent> handleTurnStarted(Game game) {
     return event -> {
       if (event instanceof TurnStarted) {
-        TurnStarted turnEvent = (TurnStarted) event;
-        game.startTurn(PlayerId.of(turnEvent.getPlayerId()), turnEvent.getTurnNumber());
+        System.out.println("Turno iniciado: " + ((TurnStarted) event).getTurnNumber());
       }
     };
   }
+
 
   private Consumer<? super DomainEvent> handleTurnEnded(Game game) {
     return event -> {
       if (event instanceof TurnEnded) {
         TurnEnded turnEvent = (TurnEnded) event;
-        game.endTurn(PlayerId.of(turnEvent.getPlayerId()), turnEvent.getTurnNumber(), turnEvent.getReason());
+        System.out.println("Turno finalizado correctamente para el jugador: " + turnEvent.getPlayerId());
       }
     };
   }
+
+
 
   private Consumer<? super DomainEvent> handleMoveMade(Game game) {
     return event -> {
       if (event instanceof MoveMade) {
         MoveMade moveEvent = (MoveMade) event;
-        game.makeMove(PlayerId.of(moveEvent.getPlayerId()), moveEvent.getFromPosition(), moveEvent.getToPosition());
+        System.out.println("Movimiento realizado por el jugador: " + moveEvent.getPlayerId() +
+                " desde " + moveEvent.getFromPosition() +
+                " hacia " + moveEvent.getToPosition());
       }
     };
   }
+
 
   private Consumer<? super DomainEvent> handleAccusationMade(Game game) {
     return event -> {
       if (event instanceof AccusationMade) {
         AccusationMade accEvent = (AccusationMade) event;
-        game.makeAccusation(PlayerId.of(accEvent.getPlayerId()), accEvent.getAccusedSuspect(), accEvent.getAccusedWeapon(), accEvent.getAccusedLocation());
+        System.out.println("Acusación realizada por el jugador: " + accEvent.getPlayerId() +
+                " contra " + accEvent.getAccusedSuspect() +
+                " con el arma " + accEvent.getAccusedWeapon() +
+                " en " + accEvent.getAccusedLocation());
       }
     };
   }

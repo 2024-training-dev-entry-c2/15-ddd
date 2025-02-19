@@ -3,6 +3,8 @@ package com.buildingclue.gameDynamics.domain.game.values;
 import com.buildingclue.shared.domain.constants.States;
 import com.buildingclue.shared.domain.generic.IValueObject;
 
+import java.util.Objects;
+
 import static com.buildingclue.shared.domain.utils.ValidationUtils.validateNotNull;
 
 public class GameState implements IValueObject {
@@ -25,5 +27,19 @@ public class GameState implements IValueObject {
 
   public States getState() {
     return state;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    GameState gameState = (GameState) o;
+    return state == gameState.state; // Suponiendo que el estado es un valor que puede compararse directamente.
+  }
+
+  // Sobrescribir hashCode() para que sea consistente con equals()
+  @Override
+  public int hashCode() {
+    return Objects.hash(state);
   }
 }

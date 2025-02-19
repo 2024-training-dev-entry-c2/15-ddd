@@ -33,9 +33,19 @@ public class Game extends AggregateRoot<GameId> {
 
   private Game(GameId id, GameState state, Board board, List<Rule> rules, List<Turn> turns, NumberPlayers players) {
     super(id);
+    this.state = state;
+    this.board = board;
+    this.rules = rules;
+    this.turns = turns;
+    this.players = players;
     subscribe(new GameHandler(this));
     apply(new GameStarted(id.getValue()));
   }
+
+  public static Game createGame(GameId id, GameState state, Board board, List<Rule> rules, List<Turn> turns, NumberPlayers players) {
+    return new Game(id, state, board, rules, turns, players);
+  }
+
 
   public GameState getState() {
     return state;
@@ -89,12 +99,20 @@ public class Game extends AggregateRoot<GameId> {
   }
 
   public void startTurn(PlayerId playerId, Integer turnNumber) {
+    if (this.state.equals(GameState.of(States.FINISHED))) {
+      return;
+    }
     apply(new TurnStarted(this.getIdentity().getValue(), playerId.getValue(), turnNumber));
   }
 
+
   public void endTurn(PlayerId playerId, Integer turnNumber, String reason) {
+    if (this.state.equals(GameState.of(States.FINISHED))) {
+      return;
+    }
     apply(new TurnEnded(playerId.getValue(), turnNumber, reason));
   }
+
 
   public void makeMove(PlayerId playerId, String fromPosition, String toPosition) {
     apply(new MoveMade(playerId.getValue(), fromPosition, toPosition));
