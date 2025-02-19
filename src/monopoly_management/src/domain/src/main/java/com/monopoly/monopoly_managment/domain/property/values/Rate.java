@@ -31,6 +31,6 @@ public class Rate implements IValueObject {
     Validator.validateNegative(withHotel, "Rate with hotel must be positive");
     Validator.validateMax(base, withHotel, "Base rate must be less than rate with hotel");
     Validator.validateMax(withHotel, 100.0, "Rate with hotel must be less than 100");
-    Validator.validateBiggerThan(base, withHotel, "Base rate must be greater than rate with hotel");
+    Validator.validateBiggerThan( withHotel,base, "Base rate must be greater than rate with hotel");
   }
 }

@@ -15,6 +15,8 @@ import com.monopoly.shared.domain.generic.DomainEvent;
 
 import java.util.function.Consumer;
 
+import static java.util.spi.ToolProvider.findFirst;
+
 public class BankAccountHandler extends DomainActionsContainer {
   private final BankAccount bankAccount;
 
@@ -36,7 +38,6 @@ public class BankAccountHandler extends DomainActionsContainer {
         switch (transaction.getTransactionType()) {
           case DEPOSIT -> bankAccount.plusBalance(transaction);
           case RETIREMENT -> bankAccount.minusBalance(transaction);
-          default -> throw new IllegalArgumentException("Invalid transaction type");
         }
         bankAccount.getTransactions().add(transaction);
       } catch (IllegalArgumentException e) {
@@ -47,26 +48,36 @@ public class BankAccountHandler extends DomainActionsContainer {
 
   public Consumer<? extends DomainEvent> cancelTransaction() {
     return (RejectedTransaction event) -> {
-      Transaction transaction = bankAccount.getTransactions().stream().filter(t -> t.getIdentity().equals(TransactionId.of(event.getTransactionId()))).findFirst().orElseThrow();
+      TransactionId transactionId = TransactionId.of(event.getTransactionId());
+      System.out.println("Buscando transacción con ID: " + transactionId.getValue());
+      bankAccount.getTransactions().forEach(t -> System.out.println("Transacción en la lista: " + t.getIdentity().getValue()));
+
+      Transaction transaction = bankAccount.getTransactions().stream()
+        .filter(t -> t.getIdentity().equals(transactionId))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(event.getTransactionId() + " not found"));
+
       bankAccount.getTransactions().remove(transaction);
       switch (transaction.getTransactionType()) {
         case DEPOSIT -> bankAccount.minusBalance(transaction);
         case RETIREMENT -> bankAccount.plusBalance(transaction);
-        default -> throw new IllegalArgumentException("Invalid transaction type");
       }
     };
   }
 
   public Consumer<? extends DomainEvent> notValidateFounds() {
     return (NotValidatedFounds event) -> {
-      Transaction transaction = bankAccount.getTransactions().stream().filter(t -> t.getIdentity().equals(TransactionId.of(event.getAccountId()))).findFirst().orElseThrow();
+      Transaction transaction = bankAccount.getTransactions().stream().filter(t -> t.getIdentity().equals(TransactionId.of(event.getTransactionId()))).findFirst().orElseThrow();
       bankAccount.getTransactions().remove(transaction);
     };
   }
 
   public Consumer<? extends DomainEvent> validateFounds() {
     return (ValidatedFounds event) -> {
-      Transaction transaction = bankAccount.getTransactions().stream().filter(t -> t.getIdentity().equals(TransactionId.of(event.getAccountId()))).findFirst().orElseThrow();
+      Transaction transaction = bankAccount.getTransactions().stream()
+        .filter(t -> t.getIdentity().equals(TransactionId.of(event.getTransactionId())))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(event.getTransactionId() + " not found"));
       bankAccount.getTransactions().add(transaction);
     };
   }

@@ -17,12 +17,6 @@ public class Mortgage extends Entity<MortgageId> {
     this.isMortgaged = isMortgaged;
     this.cancellationCost = cancellationCost;
   }
-  public Mortgage( Value value, IsMortgaged isMortgaged, CancellationCost cancellationCost) {
-    super(new MortgageId());
-    this.value = value;
-    this.isMortgaged = isMortgaged;
-    this.cancellationCost = cancellationCost;
-  }
 
   public Value getValue() {
     return value;
@@ -48,43 +42,21 @@ public class Mortgage extends Entity<MortgageId> {
     this.cancellationCost = cancellationCost;
   }
 
-  public void activate(){
-    if (getIsMortgaged().getValue()){
-      throw new IllegalStateException(" Mortage is already active ");
+  public void activate() {
+    if (getIsMortgaged().getValue()) {
+      throw new IllegalStateException("Mortgage is already active");
     }
-    addBalance(calculateCost());
     this.isMortgaged = IsMortgaged.of(true);
   }
 
- public void cancel(){
-    if (!getIsMortgaged().getValue()){
-      throw new IllegalStateException(" Mortage is not active ");
+  public void cancel() {
+    setIsMortgaged(IsMortgaged.of(false));
+  }
+
+  public Double calculateCancellationCost() {
+    if (!getIsMortgaged().getValue()) {
+      throw new IllegalStateException("Mortgage is not active");
     }
-   if (getBalance() < calculateCost()){
-     throw new IllegalStateException(" Not enough balance ");
-   }
-    this.isMortgaged = IsMortgaged.of(false);
- }
-
- public Double calculateCost(){
-    return getValue().getValue() * getImprovementsLevel();
- }
-
- public Double calculateCancellationCost(){
-    if (getIsMortgaged().getValue()){
-      throw new IllegalStateException(" Mortage is not active ");
-    }
-    return calculateCost() * 2.5;
-  }
-
-  private Integer getImprovementsLevel(){
-    return 1;
-  }
-
-  private Double getBalance(){
-    return 1.0;
-  }
-
-  private void addBalance(Double balance){
+    return getValue().getValue() * 2.5;
   }
 }

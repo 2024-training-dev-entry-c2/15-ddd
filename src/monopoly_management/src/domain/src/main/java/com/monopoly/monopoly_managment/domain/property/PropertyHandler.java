@@ -37,9 +37,7 @@ public class PropertyHandler extends DomainActionsContainer {
 
   public Consumer<? extends DomainEvent> demolishImprovement() {
     return (DemolishedImprovement event) -> {
-      if (property.getDevelopmentLevel() == 0) {
-      throw new RuntimeException("The property is already at its minimum level");
-    }
+
     property.getImprovements().downgrade();
     property.addBalance(event.getCost());
     };
@@ -57,48 +55,26 @@ public class PropertyHandler extends DomainActionsContainer {
 
   public Consumer<? extends DomainEvent> cancelMortgage() {
     return (MortgageCanceled event) -> {
-      if (!property.getMortgage().getIsMortgaged().getValue()) {
-      throw new RuntimeException("The property is not mortgaged");
-    }
-    property.validateCancelMortgage();
+
     property.getMortgage().cancel();
     property.subtractBalance(event.getAmount());
   };}
 
   public Consumer<? extends DomainEvent> assignOwner() {
     return (OwnerAssigned event) -> {
-      if (property.getOwner().getIdentity().getValue() != null) {
-        throw new RuntimeException("The property already has an owner");
-      }
-      property.getOwner().acquireProperty(property.getIdentity());
-      property.getContract().sign(event.getOwnerId());
+    property.setOwner(property.getOwnerById(event.getOwnerId()));
     };
   }
 
   public Consumer<? extends DomainEvent> removeOwner() {
     return (OwnerRemoved event) -> {
-      if ( property.getOwner().getIdentity().getValue().equals(event.getPropertyId())) {
-        if ( property.getOwner().getIdentity().getValue() == null) {
-      throw new RuntimeException("The property does not have an owner");
-        }
-    property.getOwner().transferProperty(property.getIdentity(), property.getOwner());
-    }
-    property.getContract().cancel();
-    property.getOwner().sellProperty(property.getIdentity());
-    property.addBalance(property.getPrice().getValue());
+      property.setOwner(null);
     };
   }
 
   public Consumer<? extends DomainEvent> modifyOwner() {
     return (OwnerModified event) -> {
-      if ( property.getOwner().getIdentity().getValue().equals( event.getPreviousOwnerId())) {
-        if ( property.getOwner().getIdentity().getValue() == null) {
-      throw new RuntimeException("The property does not have an owner");
-        }
-    }
-    property.getOwner().transferProperty(property.getIdentity(), property.getOwnerById(event.getOwnerId()));
-    property.getContract().cancel();
-    property.getOwnerById(event.getOwnerId()).sellProperty(property.getIdentity());
+      property.setOwner(property.getOwnerById(event.getOwnerId()));
   };
 }
 }

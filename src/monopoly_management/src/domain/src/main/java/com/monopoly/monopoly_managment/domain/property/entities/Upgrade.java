@@ -14,7 +14,7 @@ public class Upgrade extends Entity<UpgradeId> {
   private PropertyId propertyId;
   private Cost cost;
 
-  protected Upgrade(UpgradeId identity, TypeImprovement typeImprovement, DevelopmentLevel developmentLevel, Cost cost, PropertyId propertyId) {
+  public Upgrade(UpgradeId identity, TypeImprovement typeImprovement, DevelopmentLevel developmentLevel, Cost cost, PropertyId propertyId) {
     super(identity);
     this.typeImprovement = typeImprovement;
     this.developmentLevel = developmentLevel;

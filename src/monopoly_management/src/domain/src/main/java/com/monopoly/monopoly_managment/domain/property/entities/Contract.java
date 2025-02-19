@@ -63,13 +63,8 @@ public class Contract extends Entity<ContractId> {
   }
 
   public void sign(String ownerId){
-    if (getIsActive().getValue()){
-      throw new IllegalStateException("Contract is already signed");
-    }
-    else {
       this.isActive = IsActive.of(true);
       this.parties = Parties.of(ownerId);
-    }
   }
 
   public void cancel(){
@@ -106,7 +101,7 @@ public class Contract extends Entity<ContractId> {
       throw new IllegalStateException("Tenant is already vinculated");
     }
     else {
-      this.parties.getTenantId().add(tenantId);
+      this.parties.getTenantId().add(tenantId.getValue());
     }
   }
 

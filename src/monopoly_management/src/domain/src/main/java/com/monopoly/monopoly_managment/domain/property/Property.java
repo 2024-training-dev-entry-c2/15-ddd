@@ -2,6 +2,7 @@ package com.monopoly.monopoly_managment.domain.property;
 
 import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
+import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
 import com.monopoly.monopoly_managment.domain.property.entities.Mortgage;
 import com.monopoly.monopoly_managment.domain.property.entities.Owner;
@@ -16,17 +17,21 @@ import com.monopoly.monopoly_managment.domain.property.events.OwnerRemoved;
 import com.monopoly.monopoly_managment.domain.property.values.Alias;
 import com.monopoly.monopoly_managment.domain.property.values.ColorGroup;
 import com.monopoly.monopoly_managment.domain.property.values.Cost;
+import com.monopoly.monopoly_managment.domain.property.values.CostEnum;
+import com.monopoly.monopoly_managment.domain.property.values.DevelopmentLevel;
 import com.monopoly.monopoly_managment.domain.property.values.Name;
 import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.monopoly_managment.domain.property.values.Portfolio;
 import com.monopoly.monopoly_managment.domain.property.values.Price;
 import com.monopoly.monopoly_managment.domain.property.values.PropertyId;
 import com.monopoly.monopoly_managment.domain.property.values.Token;
+import com.monopoly.monopoly_managment.domain.property.values.TypeImprovement;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Property extends AggregateRoot<PropertyId> {
@@ -40,15 +45,26 @@ public class Property extends AggregateRoot<PropertyId> {
   private ColorGroup colorGroup;
 
   // region Constructors
-  private Property(PropertyId identity ) {
+  private Property(PropertyId identity, Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
     super(identity);
     subscribe(new PropertyHandler(this));
-
+    this.contract = contract;
+    this.mortgage = mortgage;
+    this.name = name;
+    this.price = price;
+    this.colorGroup = colorGroup;
+    this.improvements = new Upgrade( new UpgradeId(), TypeImprovement.of(TypeImprovementEnum.HOUSE), DevelopmentLevel.of(0), Cost.of(0.0, CostEnum.BASE), identity);
   }
 
-  public Property() {
+  public Property(Contract contract, Mortgage mortgage, Name name, Price price, ColorGroup colorGroup) {
     super(new PropertyId());
     subscribe(new PropertyHandler(this));
+    this.contract = contract;
+    this.mortgage = mortgage;
+    this.name = name;
+    this.price = price;
+    this.colorGroup = colorGroup;
+    this.improvements = new Upgrade( new UpgradeId(), TypeImprovement.of(TypeImprovementEnum.HOUSE), DevelopmentLevel.of(0), Cost.of(0.0, CostEnum.BASE), new PropertyId());
   }
   // endregion
 
@@ -169,12 +185,6 @@ public class Property extends AggregateRoot<PropertyId> {
     }
   }
 
-  public void validateCancelMortgage(){
-    if (getBalance() < mortgage.calculateCancellationCost()){
-      throw new RuntimeException(" Not enough balance ");
-    }
-  }
-
   public void validateMaximumDevelopmentLevel() {
     if (getDevelopmentLevel() == 8) {
       throw new RuntimeException("The property is already at its maximum level");
@@ -187,13 +197,14 @@ public class Property extends AggregateRoot<PropertyId> {
     }
   }
 
+
   public Owner getOwnerById(final String ownerId) {
     return new Owner(Alias.of("alias"), Token.of("example"), Portfolio.of(List.of("1")), null);
   }
   // endregion
 
-  public static Property from(final String identity,final List<DomainEvent> domainEvents) {
-    Property property = new Property(PropertyId.of(identity));
+  public static Property from(final String identity,final List<DomainEvent> domainEvents, final Contract contract, final Mortgage mortgage, final Name name, final Price price, final ColorGroup colorGroup) {
+    Property property = new Property(PropertyId.of(identity), contract, mortgage, name, price, colorGroup);
 
     domainEvents.forEach(property::apply);
     return property;

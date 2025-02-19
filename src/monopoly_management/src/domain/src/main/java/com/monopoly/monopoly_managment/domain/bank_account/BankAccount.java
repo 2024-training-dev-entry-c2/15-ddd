@@ -15,6 +15,7 @@ import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +27,16 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // region Constructors
   public BankAccount() {
     super(new BankAccountId());
+    this.transactions = new ArrayList<>();
+    this.balance = new Balance(0.0);
     subscribe(new BankAccountHandler(this));
-
   }
 
   private BankAccount(BankAccountId identity) {
     super(identity);
+    this.transactions = new ArrayList<>();
+    this.balance = new Balance(0.0);
     subscribe(new BankAccountHandler(this));
-
   }
   // endregion
   // region Getters and Setters
@@ -67,16 +70,16 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     apply(new CompletedTransaction(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount.getValue(), origin, destiny));
   }
 
-  public void canceledTransaction(OwnerId ownerId, String transactionId, TypeEnum type, Double amount, String origin, String destiny){
-    apply(new RejectedTransaction(ownerId.getValue(), transactionId, type, amount, origin, destiny));
+  public void canceledTransaction(OwnerId ownerId, TransactionId transactionId, TypeEnum type, Double amount, String origin, String destiny){
+    apply(new RejectedTransaction(ownerId.getValue(), transactionId.getValue(), type, amount, origin, destiny));
   }
 
-  public void validatedFounds(BankAccountId accountId, Double amount, TypeEnum type){
-    apply(new ValidatedFounds(accountId.getValue(), amount, type));
+  public void validatedFounds(TransactionId transactionId, Double amount, TypeEnum type) {
+    apply(new ValidatedFounds(transactionId.getValue(), amount, type));
   }
 
-  public void notValidatedFounds(BankAccountId accountId, Double amount, TypeEnum type){
-    apply(new NotValidatedFounds(accountId.getValue(), amount, type));
+  public void notValidatedFounds(TransactionId transactionId, Double amount, TypeEnum type) {
+    apply(new NotValidatedFounds(transactionId.getValue(), amount, type));
   }
   // endregion
 
@@ -97,6 +100,9 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
 
   public static BankAccount from(final String identity, final OwnerId ownerId, final Balance initialBalance, final List<Transaction> transactions, final List<DomainEvent> domainEvents) {
     BankAccount bankAccount = new BankAccount(BankAccountId.of(identity));
+    bankAccount.setOwnerId(ownerId);
+    bankAccount.setBalance(initialBalance);
+    bankAccount.setTransactions(transactions);
 
     domainEvents.forEach(bankAccount::apply);
     return bankAccount;

@@ -7,7 +7,7 @@ public class OwnerId extends Identity {
     super();
   }
 
-  private OwnerId(String value){
+  public OwnerId(String value){
     super(value);
   }
 

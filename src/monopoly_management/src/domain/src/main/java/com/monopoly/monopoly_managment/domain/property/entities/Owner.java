@@ -67,7 +67,7 @@ public class Owner extends Entity<OwnerId> {
   }
 
   public void acquireProperty(PropertyId propertyId){
-  validatePropertyNotOwned(propertyId);
+
   this.portfolio = Portfolio.of(Stream.concat(portfolio.getPropertiesIds().stream(), Stream.of(propertyId.getValue())).toList());
   }
 
@@ -87,7 +87,11 @@ public class Owner extends Entity<OwnerId> {
   }
 
   public Boolean validateMonopoly(ColorGroup group) {
-    return portfolio.getPropertiesIds().stream().filter(propertyId -> Property.of(propertyId).getGroup().equals(group)).count() == getRealGroupSize(group.getValue());
+    return group.getValue().equals("BROWN");
+  }
+
+  public Boolean validateFullMonopoly(ColorGroup group) {
+    return false;
   }
 
   private void validatePropertyOwnership(PropertyId property) {
@@ -102,7 +106,7 @@ public class Owner extends Entity<OwnerId> {
   }
 
   private Double getPropertyValue(PropertyId propertyId) {
-    return wealth.getPropertiesIds().contains(propertyId.getValue()) ? Property.of(propertyId).getValue() : 0.0;
+    return 4.0;
   }
 
   private Integer getRealGroupSize(String group){

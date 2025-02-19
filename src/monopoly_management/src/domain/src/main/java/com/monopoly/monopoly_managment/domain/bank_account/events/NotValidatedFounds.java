@@ -4,19 +4,19 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class NotValidatedFounds extends DomainEvent {
-  private final String accountId;
+  private final String transactionId;
   private final Double amount;
   private final TypeEnum type;
 
-  public NotValidatedFounds(String accountId, Double amount, TypeEnum type) {
+  public NotValidatedFounds(String transactionId, Double amount, TypeEnum type) {
     super(EventsEnum.NOT_VALIDATED_FOUNDS.name());
-    this.accountId = accountId;
+    this.transactionId = transactionId;
     this.amount = amount;
     this.type = type;
   }
 
-  public String getAccountId() {
-    return accountId;
+  public String getTransactionId() {
+    return transactionId;
   }
 
   public Double getAmount() {
