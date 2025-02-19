@@ -1,0 +1,9 @@
+rootProject.name = 'theGameOfLife'
+
+include ':shared:domain'
+include ':trajectory:domain'
+project(':shared:domain').projectDir = file('.src/shared/src/domain')
+project(':trajectory:domain').projectDir = file('.src/trajectory/src/domain')
+
+
+
