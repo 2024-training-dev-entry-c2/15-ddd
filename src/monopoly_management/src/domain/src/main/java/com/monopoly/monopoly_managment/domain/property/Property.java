@@ -2,7 +2,6 @@ package com.monopoly.monopoly_managment.domain.property;
 
 import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
-import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
 import com.monopoly.monopoly_managment.domain.property.entities.Mortgage;
 import com.monopoly.monopoly_managment.domain.property.entities.Owner;
@@ -31,7 +30,6 @@ import com.monopoly.monopoly_managment.domain.property.values.UpgradeId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Property extends AggregateRoot<PropertyId> {

@@ -1,22 +1,18 @@
 package com.monopoly.monopoly_managment.domain.bank_account.entities;
 
-import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
-import com.monopoly.monopoly_managment.domain.bank_account.values.Destiny;
-import com.monopoly.monopoly_managment.domain.bank_account.values.Origin;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
-import com.monopoly.monopoly_managment.domain.bank_account.values.Type;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.Entity;
 import com.monopoly.shared.domain.utils.Validator;
 
 public class Transaction extends Entity<TransactionId> {
-  private Amount amount;
-  private Type type;
-  private Destiny destiny;
-  private Origin origin;
+  private Double amount;
+  private TypeEnum type;
+  private String destiny;
+  private String origin;
 
-  public Transaction(TransactionId identity, Amount amount, Type type, Destiny destiny, Origin origin) {
+  public Transaction(TransactionId identity, Double amount, TypeEnum type, String destiny, String origin) {
     super(identity);
     this.amount = amount;
     this.type = type;
@@ -25,7 +21,7 @@ public class Transaction extends Entity<TransactionId> {
     validate();
   }
 
-  public Transaction(Amount amount, Type type, Destiny destiny, Origin origin) {
+  public Transaction(Double amount, TypeEnum type, String destiny, String origin) {
     super(new TransactionId());
     this.amount = amount;
     this.type = type;
@@ -34,40 +30,40 @@ public class Transaction extends Entity<TransactionId> {
     validate();
   }
 
-  public Destiny getDestiny() {
+  public String getDestiny() {
     return destiny;
   }
 
-  public void setDestiny(Destiny destiny) {
+  public void setDestiny(String destiny) {
     this.destiny = destiny;
   }
 
-  public Origin getOrigin() {
+  public String getOrigin() {
     return origin;
   }
 
-  public void setOrigin(Origin origin) {
+  public void setOrigin(String origin) {
     this.origin = origin;
   }
 
-  public Amount getAmount() {
+  public Double getAmount() {
     return amount;
   }
 
-  public void setAmount(Amount amount) {
+  public void setAmount(Double amount) {
     this.amount = amount;
   }
 
-  public Type getType() {
+  public TypeEnum getType() {
     return type;
   }
 
-  public void setType(Type type) {
+  public void setType(TypeEnum type) {
     this.type = type;
   }
 
   public void validate(){
-    Validator.validateNotEquals(destiny.getValue(), origin.getValue(), "Destiny and Origin");
+    Validator.validateNotEquals(destiny, origin, "Destiny and Origin");
   }
 
   public String toString() {
@@ -79,12 +75,12 @@ public class Transaction extends Entity<TransactionId> {
             '}';
   }
   public void isEnoughFunds(Transaction transaction, Balance balance){
-    if (balance.getValue() < transaction.getAmount().getValue()){
+    if (balance.getValue() < transaction.getAmount()){
       throw new IllegalArgumentException("Insufficient funds");
     }
   }
 
   public TypeEnum getTransactionType(){
-    return type.getValue();
+    return type;
   }
 }
