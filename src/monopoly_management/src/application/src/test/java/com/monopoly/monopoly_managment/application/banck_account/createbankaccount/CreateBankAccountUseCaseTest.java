@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import reactor.test.StepVerifier;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateBankAccountUseCaseTest {
@@ -19,7 +17,7 @@ class CreateBankAccountUseCaseTest {
 
   @Test
   void executeSuccess(){
-    CreateBankAccountRequest request = new CreateBankAccountRequest("bankAccount-123", List.of("bankAccount-121"), 100.0);
+    CreateBankAccountRequest request = new CreateBankAccountRequest("bankAccount-123");
     StepVerifier
       .create(useCase.execute(request))
       .assertNext(response ->{

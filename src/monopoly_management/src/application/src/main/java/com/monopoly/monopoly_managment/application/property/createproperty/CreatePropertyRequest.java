@@ -3,7 +3,6 @@ package com.monopoly.monopoly_managment.application.property.createproperty;
 import com.monopoly.shared.application.Request;
 
 public class CreatePropertyRequest extends Request {
-  private final String upgrade;
   private final String contract;
   private final String mortgage;
   private final String owner;
@@ -12,9 +11,8 @@ public class CreatePropertyRequest extends Request {
   private final Double price;
   private final String colorGroup;
 
-  public CreatePropertyRequest(String upgrade, String contract, String mortgage, String owner, String update, String name, Double price, String colorGroup) {
+  public CreatePropertyRequest(String contract, String mortgage, String owner, String update, String name, Double price, String colorGroup) {
     super(null);
-    this.upgrade = upgrade;
     this.contract = contract;
     this.mortgage = mortgage;
     this.owner = owner;
@@ -26,10 +24,6 @@ public class CreatePropertyRequest extends Request {
 
   public String getUpdate() {
     return update;
-  }
-
-  public String getUpgrade() {
-    return upgrade;
   }
 
   public String getContract() {

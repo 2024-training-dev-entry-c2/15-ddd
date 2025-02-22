@@ -17,7 +17,7 @@ class CreatePropertyUseCaseTest {
 
   @Test
   void execute() {
-    CreatePropertyRequest request = new CreatePropertyRequest("upgrade", "contract", "mortgage", "owner", "update" ,"name", 1.0, "BROWN");
+    CreatePropertyRequest request = new CreatePropertyRequest("upgrade", "contract", "mortgage", "owner","name", 1.0, "BROWN");
     StepVerifier
       .create(useCase.execute(request))
       .assertNext(response -> {
