@@ -260,9 +260,7 @@ class BankAccountTest {
     ));
     List<DomainEvent> domainEvents = new ArrayList<>();
     domainEvents.add(new ValidatedFounds("transaction-123", 200.0, TypeEnum.DEPOSIT));
-
     BankAccount bankAccount = BankAccount.from(identity, ownerId.getValue(), domainEvents);
-
     assertNotNull(bankAccount);
     assertEquals(identity, bankAccount.getIdentity().getValue());
     assertEquals(owner.getIdentity(), bankAccount.getOwnerId());

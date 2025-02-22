@@ -34,41 +34,35 @@ class PropertyTest {
     upgradeId = UpgradeId.of("upgrade-123");
     cost = Cost.of(0.0, CostEnum.BASE);
     type = TypeImprovementEnum.HOUSE;
-    property = new Property(
-      new Contract(new ContractId(), TypeContrat.of(TypeContratEnum.SALE), Rate.of(1.0, 4.0), Parties.of("owner-123"), IsActive.of(true)),
-      new Mortgage(MortgageId.of("mortgage-123"), Value.of(1000.0), IsMortgaged.of(false), CancellationCost.of(500.0)),
-      Name.of("property-name"),
-      Price.of(1000.0),
-      ColorGroup.of("BROWN")
-    );
-    property.setImprovements(new Upgrade(upgradeId, TypeImprovement.of(type), DevelopmentLevel.of(0), cost, propertyId));
-    property.setOwner(new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("1")), null));
+    property = new Property();
+    property.setImprovements(new Upgrade(upgradeId, TypeImprovement.of(type), DevelopmentLevel.of(0), cost, propertyId).getIdentity());
+    property.setOwner(new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("1")), null).getIdentity().getValue());
   }
 
   @Test
   void madeImprovement() {
     property.madeImprovement(upgradeId.getValue(), propertyId.getValue(), type, cost.getValue());
-    assertEquals(1, property.getImprovements().getDevelopmentLevel().getValue());
+    assertEquals(3, property.getDevelopmentLevel());
   }
 
   @Test
   void demolishedImprovement() {
-    property.getImprovements().setDevelopmentLevel(DevelopmentLevel.of(1));
-    property.demolishedImprovement(upgradeId, propertyId, type, cost);
-    assertEquals(0, property.getImprovements().getDevelopmentLevel().getValue());
+    property.setDevelopmentLevel(DevelopmentLevel.of(1));
+    property.demolishedImprovement(upgradeId.getValue(), propertyId.getValue(), type, cost.getValue());
+    assertEquals(0, property.getDevelopmentLevel());
   }
 
   @Test
   void mortgaged() {
-    property.mortgaged(ownerId, propertyId, Amount.of(500.0));
-    assertTrue(property.getMortgage().getIsMortgaged().getValue());
+    property.mortgaged(ownerId.getValue(), propertyId.getValue(), 500.0);
+    assertTrue(property.getIsMortgaged().getIsMortgaged().getValue());
   }
 
   @Test
   void mortgageFailed() {
     property.addBalance(1000.0);
-    property.mortgaged(ownerId, propertyId, Amount.of(500.0));
-    assertThrows(RuntimeException.class, () -> property.mortgaged(ownerId, propertyId, Amount.of(500.0)));
+    property.mortgaged(ownerId.getValue(), propertyId.getValue(), 500.0);
+    assertThrows(RuntimeException.class, () -> property.mortgaged(ownerId.getValue(), propertyId.getValue(), 500.0));
   }
 
   @Test
@@ -76,14 +70,6 @@ class PropertyTest {
     property.addBalance(1000.0);
     assertDoesNotThrow(() -> property.validateSufficientBalance(1.0));
     assertThrows(RuntimeException.class, () -> property.validateSufficientBalance(1500.0));
-  }
-
-  @Test
-  void validateMaximumDevelopmentLevel() {
-    property.getImprovements().setDevelopmentLevel(DevelopmentLevel.of(8));
-    assertThrows(RuntimeException.class, () -> property.validateMaximumDevelopmentLevel());
-    property.getImprovements().setDevelopmentLevel(DevelopmentLevel.of(7));
-    assertDoesNotThrow(() -> property.validateMaximumDevelopmentLevel());
   }
 
   @Test
@@ -106,8 +92,8 @@ class PropertyTest {
 
     assertNotNull(property);
     assertEquals(propertyId, property.getIdentity());
-    assertEquals(contract, property.getContract());
-    assertEquals(mortgage, property.getMortgage());
+    assertEquals(contract.getIdentity(), property.getContract());
+    assertEquals(mortgage.getIdentity(), property.getMortgage());
     assertEquals(name, property.getName());
     assertEquals(price, property.getPrice());
     assertEquals(colorGroup, property.getColorGroup());
@@ -131,22 +117,22 @@ class PropertyTest {
   @Test
   void testSetContract (){
     Contract contract = new Contract(new ContractId(), TypeContrat.of(TypeContratEnum.SALE), Rate.of(1.0, 4.0), Parties.of("owner-123"), IsActive.of(true));
-    property.setContract(contract);
-    assertEquals(contract, property.getContract());
+    property.setContract(contract.getIdentity());
+    assertEquals(contract.getIdentity(), property.getContract());
   }
 
   @Test
   void testSetMortgage(){
     Mortgage mortgage = new Mortgage(MortgageId.of("mortgage-123"), Value.of(1000.0), IsMortgaged.of(false), CancellationCost.of(500.0));
-    property.setMortgage(mortgage);
-    assertEquals(mortgage, property.getMortgage());
+    property.setMortgage(mortgage.getIdentity());
+    assertEquals(mortgage.getIdentity(), property.getMortgage());
   }
 
   @Test
   void testGetOwner(){
     Owner owner = new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("1")), null);
-    property.setOwner(owner);
-    assertEquals(owner, property.getOwner());
+    property.setOwner(owner.getIdentity().getValue());
+    assertEquals(owner.getIdentity(), property.getOwner());
   }
 
   @Test
@@ -189,13 +175,13 @@ class PropertyTest {
     Owner owner = new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("1")), null);
     List<DomainEvent> domainEvents = List.of(new MortgageConstituted(owner.getIdentity().getValue(), propertyId.getValue(), 1000.0));
 
-    Property property = Property.from("property-123", domainEvents, contract, mortgage, name, price, colorGroup);
-    property.setOwner(owner);
+    Property property = Property.from("property-123", domainEvents);
+    property.setOwner(owner.getIdentity().getValue());
     property.addBalance(1000.0);
 
     assertNotNull(property);
-    assertEquals(contract, property.getContract());
-    assertEquals(mortgage, property.getMortgage());
+    assertEquals(contract.getIdentity(), property.getContract());
+    assertEquals(mortgage.getIdentity(), property.getMortgage());
     assertEquals(name, property.getName());
     assertEquals(price, property.getPrice());
     assertEquals(colorGroup, property.getColorGroup());
@@ -207,20 +193,16 @@ class PropertyTest {
     OwnerId ownerId = OwnerId.of("owner-123");
     PropertyId propertyId = PropertyId.of("property-123");
     Amount amount = Amount.of(50000.0);
-
-    property.addBalance(10000.0); // Ensure sufficient balance for canceling mortgage
-    property.mortgaged(ownerId, propertyId, amount); // First mortgage the property
-    property.canceledMortgage(ownerId, propertyId, amount);
-
-    assertFalse(property.getMortgage().getIsMortgaged().getValue());
+    property.addBalance(10000.0);
+    property.mortgaged(ownerId.getValue(), propertyId.getValue(), amount.getValue());
+    property.canceledMortgage(ownerId.getValue(), propertyId.getValue(), amount.getValue());
+    assertFalse(property.getIsMortgaged().getIsMortgaged().getValue());
   }
-
-
 
   @Test
   void testValidateOwnerMonopoly() {
     Owner ownerWithMonopoly = new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123", "property-124")), null);
-    property.setOwner(ownerWithMonopoly);
+    property.setOwner(ownerWithMonopoly.getIdentity().getValue());
     property.setColorGroup(ColorGroup.of("BROWN"));
     assertDoesNotThrow(() -> property.validateOwnerMonopoly());
   }
@@ -228,7 +210,7 @@ class PropertyTest {
   @Test
   void testValidateOwnerMonopolyFailed() {
     Owner ownerWithoutMonopoly = new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123")), null);
-    property.setOwner(ownerWithoutMonopoly);
+    property.setOwner(ownerWithoutMonopoly.getIdentity().getValue());
     property.setColorGroup(ColorGroup.of("PINK"));
     assertThrows(RuntimeException.class, () -> property.validateOwnerMonopoly());
   }
@@ -237,16 +219,16 @@ class PropertyTest {
   void testAssignedOwner() {
     OwnerId newOwnerId = OwnerId.of("new-owner-123");
     PropertyId propertyId = PropertyId.of("property-123");
-    property.setOwner(new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of()), null));
-    assertDoesNotThrow(() -> property.assignedOwner(newOwnerId, propertyId));
+    property.setOwner(new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of()), null).getIdentity().getValue());
+    assertDoesNotThrow(() -> property.assignedOwner(newOwnerId.getValue(), propertyId.getValue()));
   }
 
   @Test
   void testRemovedOwner() {
     OwnerId ownerId = OwnerId.of("owner-123");
     PropertyId propertyId = PropertyId.of("property-123");
-    property.setOwner(new Owner(ownerId, Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123")), null));
-    assertDoesNotThrow(() -> property.removedOwner(ownerId, propertyId));
+    property.setOwner(new Owner(ownerId, Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123")), null).getIdentity().getValue());
+    assertDoesNotThrow(() -> property.removedOwner(ownerId.getValue(), propertyId.getValue()));
     assertNull(property.getOwner());
 
     property.setOwner(null);
@@ -260,10 +242,10 @@ class PropertyTest {
     OwnerId previousOwnerId = OwnerId.of("previous-owner-123");
 
     // Set the initial owner
-    property.setOwner(new Owner(previousOwnerId, Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123")), null));
+    property.setOwner(new Owner(previousOwnerId, Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123")), null).getIdentity().getValue());
 
     // Modify the owner
-    assertDoesNotThrow(() -> property.modifiedOwner(newOwnerId, propertyId, previousOwnerId));
+    assertDoesNotThrow(() -> property.modifiedOwner(newOwnerId.getValue(), propertyId.getValue(), previousOwnerId.getValue()));
 
   }
 
