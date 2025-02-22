@@ -1,6 +1,5 @@
 package com.monopoly.monopoly_managment.domain.property;
 
-import com.monopoly.monopoly_managment.domain.bank_account.values.Amount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.BankAccountId;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
 import com.monopoly.monopoly_managment.domain.property.entities.Mortgage;
@@ -38,7 +37,7 @@ public class Property extends AggregateRoot<PropertyId> {
 
   public Property() {
     super(new PropertyId());
-    apply(new CreatedProperty(ContractId.of("contractId").getValue(), MortgageId.of("MortgageId").getValue(), OwnerId.of("propertyId").getValue(), UpgradeId.of("updateId").getValue() ,Name.of("name").getValue(), Price.of(0.0).getValue(), ColorGroup.of("BROWN").getValue()));
+    apply(new CreatedProperty("contractId", "MortgageId", "propertyId", "updateId","name", 0.0,"BROWN"));
     subscribe(new PropertyHandler(this));
   }
   // endregion

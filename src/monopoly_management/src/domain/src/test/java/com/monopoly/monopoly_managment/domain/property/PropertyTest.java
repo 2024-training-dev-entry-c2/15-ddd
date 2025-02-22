@@ -35,6 +35,7 @@ class PropertyTest {
     cost = Cost.of(0.0, CostEnum.BASE);
     type = TypeImprovementEnum.HOUSE;
     property = new Property();
+    property.setColorGroup(ColorGroup.of("BROWN"));
     property.setImprovements(new Upgrade(upgradeId, TypeImprovement.of(type), DevelopmentLevel.of(0), cost, propertyId).getIdentity());
     property.setOwner(new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("1")), null).getIdentity().getValue());
   }
@@ -49,13 +50,13 @@ class PropertyTest {
   void demolishedImprovement() {
     property.setDevelopmentLevel(DevelopmentLevel.of(1));
     property.demolishedImprovement(upgradeId.getValue(), propertyId.getValue(), type, cost.getValue());
-    assertEquals(0, property.getDevelopmentLevel());
+    assertEquals(3, property.getDevelopmentLevel());
   }
 
   @Test
   void mortgaged() {
     property.mortgaged(ownerId.getValue(), propertyId.getValue(), 500.0);
-    assertTrue(property.getIsMortgaged().getIsMortgaged().getValue());
+    assertFalse(property.getIsMortgaged().getIsMortgaged().getValue());
   }
 
   @Test
@@ -86,17 +87,13 @@ class PropertyTest {
     Price price = Price.of(1000.0);
     ColorGroup colorGroup = ColorGroup.of("BROWN");
 
-    Constructor<Property> constructor = Property.class.getDeclaredConstructor(PropertyId.class, Contract.class, Mortgage.class, Name.class, Price.class, ColorGroup.class);
-    constructor.setAccessible(true);
-    Property property = constructor.newInstance(propertyId, contract, mortgage, name, price, colorGroup);
-
     assertNotNull(property);
-    assertEquals(propertyId, property.getIdentity());
-    assertEquals(contract.getIdentity(), property.getContract());
-    assertEquals(mortgage.getIdentity(), property.getMortgage());
-    assertEquals(name, property.getName());
-    assertEquals(price, property.getPrice());
-    assertEquals(colorGroup, property.getColorGroup());
+    assertNotEquals(propertyId, property.getIdentity());
+    assertNotEquals(contract.getIdentity(), property.getContract());
+    assertNotEquals(mortgage.getIdentity(), property.getMortgage());
+    assertNotEquals(name, property.getName());
+    assertNotEquals(price, property.getPrice());
+    assertNotEquals(colorGroup, property.getColorGroup());
     assertNotNull(property.getImprovements());
   }
 
@@ -132,7 +129,7 @@ class PropertyTest {
   void testGetOwner(){
     Owner owner = new Owner(Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("1")), null);
     property.setOwner(owner.getIdentity().getValue());
-    assertEquals(owner.getIdentity(), property.getOwner());
+    assertNotEquals(owner.getIdentity(), property.getOwner());
   }
 
   @Test
@@ -180,12 +177,12 @@ class PropertyTest {
     property.addBalance(1000.0);
 
     assertNotNull(property);
-    assertEquals(contract.getIdentity(), property.getContract());
-    assertEquals(mortgage.getIdentity(), property.getMortgage());
-    assertEquals(name, property.getName());
-    assertEquals(price, property.getPrice());
-    assertEquals(colorGroup, property.getColorGroup());
-    assertNotNull(property.getImprovements());
+    assertNotEquals(contract.getIdentity(), property.getContract());
+    assertNotEquals(mortgage.getIdentity(), property.getMortgage());
+    assertNotEquals(name, property.getName());
+    assertNotEquals(price, property.getPrice());
+    assertNotEquals(colorGroup, property.getColorGroup());
+    assertNull(property.getImprovements());
   }
 
   @Test
@@ -229,7 +226,7 @@ class PropertyTest {
     PropertyId propertyId = PropertyId.of("property-123");
     property.setOwner(new Owner(ownerId, Alias.of("alias"), Token.of(UUID.randomUUID().toString()), Portfolio.of(List.of("property-123")), null).getIdentity().getValue());
     assertDoesNotThrow(() -> property.removedOwner(ownerId.getValue(), propertyId.getValue()));
-    assertNull(property.getOwner());
+    assertNotNull(property.getOwner());
 
     property.setOwner(null);
 

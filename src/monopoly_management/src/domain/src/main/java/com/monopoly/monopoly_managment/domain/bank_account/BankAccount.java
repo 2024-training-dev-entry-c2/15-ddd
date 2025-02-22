@@ -15,7 +15,6 @@ import com.monopoly.monopoly_managment.domain.property.values.OwnerId;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +24,14 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   private Balance balance;
 
   // region Constructors
-  public BankAccount(String ownerId) {
+  public BankAccount() {
     super(new BankAccountId());
-    this.owner = OwnerId.of(ownerId);
-    this.transactions = new ArrayList<>();
-    this.balance = new Balance(0.0);
+    apply(new CreatedBankAccount("defaultId", "ownerId"));
     subscribe(new BankAccountHandler(this));
   }
 
-  private BankAccount(BankAccountId identity, OwnerId ownerId) {
+  private BankAccount(BankAccountId identity) {
     super(identity);
-    this.owner = ownerId;
-    this.transactions = new ArrayList<>();
-    this.balance = new Balance(0.0);
     subscribe(new BankAccountHandler(this));
   }
   // endregion
@@ -106,8 +100,9 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // endregion
 
   public static BankAccount from(final String identity,final String ownerId, final List<DomainEvent> domainEvents) {
-    BankAccount bankAccount = new BankAccount(BankAccountId.of(identity), OwnerId.of(ownerId));
-
+    BankAccount bankAccount = new BankAccount(BankAccountId.of(identity));
+    bankAccount.setOwnerId(ownerId);
+    bankAccount.setTransactions(new ArrayList<>());
     domainEvents.forEach(bankAccount::apply);
     return bankAccount;
   }

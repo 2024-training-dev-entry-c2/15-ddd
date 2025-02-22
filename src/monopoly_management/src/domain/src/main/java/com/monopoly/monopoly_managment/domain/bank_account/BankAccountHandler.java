@@ -6,10 +6,12 @@ import com.monopoly.monopoly_managment.domain.bank_account.events.CreatedBankAcc
 import com.monopoly.monopoly_managment.domain.bank_account.events.NotValidatedFounds;
 import com.monopoly.monopoly_managment.domain.bank_account.events.RejectedTransaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.ValidatedFounds;
+import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
 import com.monopoly.shared.domain.generic.DomainActionsContainer;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 
@@ -18,15 +20,18 @@ public class BankAccountHandler extends DomainActionsContainer {
 
   public BankAccountHandler(BankAccount bankAccount) {
     this.bankAccount = bankAccount;
+    add(createdBankAccount());
     add(registerTransaction());
     add(cancelTransaction());
     add(notValidateFounds());
     add(validateFounds());
   }
 
-  public Consumer<? extends DomainEvent> createBankAccount(){
+  public Consumer<? extends DomainEvent> createdBankAccount(){
     return (CreatedBankAccount event) -> {
-      BankAccount bankAccount = new BankAccount(event.getOwnerId());
+      bankAccount.setBalance(new Balance(0.0));
+      bankAccount.setTransactions(new ArrayList<>());
+      bankAccount.setOwnerId(event.getOwnerId());
     };
   }
 
