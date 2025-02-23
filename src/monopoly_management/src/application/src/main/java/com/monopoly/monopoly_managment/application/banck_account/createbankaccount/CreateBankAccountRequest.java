@@ -2,11 +2,8 @@ package com.monopoly.monopoly_managment.application.banck_account.createbankacco
 
 import com.monopoly.shared.application.Request;
 
-import java.util.List;
-
 public class CreateBankAccountRequest extends Request {
   private final String owner;
-
 
   CreateBankAccountRequest(String owner) {
     super(null);
