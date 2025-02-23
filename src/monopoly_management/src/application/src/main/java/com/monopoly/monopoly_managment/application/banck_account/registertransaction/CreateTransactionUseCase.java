@@ -23,7 +23,6 @@ public class CreateTransactionUseCase implements ICommandUseCase<CreateTransacti
       .map(events ->{
         BankAccount bankAccount = BankAccount.from(request.getAggregateId(), request.getOrigin(), events);
         Transaction transaction = new Transaction(request.getAmount(), request.getType(), request.getOrigin(), request.getDestiny());
-        transaction.isEnoughFunds(transaction, bankAccount.getBalance());
         bankAccount.registeredTransaction(bankAccount.getIdentity(), bankAccount.getOwnerId(), transaction.getIdentity(), transaction.getType(), transaction.getAmount(), transaction.getOrigin(), transaction.getDestiny());
         bankAccount.getUncommittedEvents().forEach(repository::save);
         bankAccount.markEventsAsCommitted();
