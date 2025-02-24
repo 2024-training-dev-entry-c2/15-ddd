@@ -71,10 +71,6 @@ public class PropertyResponse {
       this.cost = cost;
     }
 
-    public TypeImprovement getTypeImprovement() {
-      return typeImprovement;
-    }
-
     public Integer getDevelopmentLevel() {
       return developmentLevel;
     }

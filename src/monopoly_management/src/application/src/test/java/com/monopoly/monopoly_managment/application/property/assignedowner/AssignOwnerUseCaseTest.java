@@ -36,5 +36,4 @@ class AssignOwnerUseCaseTest {
       .verifyComplete();
     Mockito.verify(repository).findEventsByAggregateId(Mockito.anyString());
   }
-
 }
