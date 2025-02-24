@@ -1,0 +1,18 @@
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.11.0')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    testImplementation 'org.mockito:mockito-core:5.15.2'
+
+    implementation(project(":shared:application"))
+    implementation(project(":shared:domain"))
+    implementation(project(":exchange:domain"))
+    implementation 'io.projectreactor:reactor-core:3.6.8'
+    testImplementation 'io.projectreactor:reactor-test:3.7.3'
+
+}
+
+test {
+    useJUnitPlatform()
+}

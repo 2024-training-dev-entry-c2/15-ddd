@@ -1,0 +1,13 @@
+rootProject.name = 'ddd-implement'
+
+include ':shared:domain'
+include ':shared:application'
+include ':exchange:domain'
+include ':exchange:application'
+
+project(':shared:domain').projectDir = file('./src/shared/src/domain')
+project(':exchange:domain').projectDir = file('./src/exchange/src/domain')
+project(':shared:application').projectDir = file('./src/shared/src/application')
+project(':exchange:application').projectDir = file('./src/exchange/src/application')
+
+
