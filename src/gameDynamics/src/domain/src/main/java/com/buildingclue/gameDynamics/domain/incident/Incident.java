@@ -36,6 +36,13 @@ public class Incident extends AggregateRoot<IncidentId> {
 
   private Incident(IncidentId id, StatusCase status, Suspect suspect, Weapon weapon, Location location, List<String> clues) {
     super(id);
+    this.status = status;
+    this.suspect = suspect;
+    this.weapon = weapon;
+    this.location = location;
+    this.clues = (clues != null)
+            ? clues.stream().map(Clue::new).toList()
+            : new ArrayList<>();
     subscribe(new IncidentHandler(this));
     apply(new InvestigationStarted(id.getValue()));
   }
@@ -85,7 +92,10 @@ public class Incident extends AggregateRoot<IncidentId> {
   }
 
   public void addClue(Clue clue) {
-    apply(new ClueDiscovered(this.getIdentity().getValue(), clue.getValue()));
+    if (!this.clues.contains(clue)) {
+      this.clues.add(clue);
+      apply(new ClueDiscovered(this.getIdentity().getValue(), clue.getValue()));
+    }
   }
 
   public void identifySuspect(Suspect suspect) {
@@ -110,6 +120,4 @@ public class Incident extends AggregateRoot<IncidentId> {
       this.status = StatusCase.of(States.SOLVED);
     }
   }
-
-
 }
