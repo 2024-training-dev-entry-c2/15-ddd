@@ -20,18 +20,7 @@ public class BankAccountResponse {
   public String getBankAccountID() {
     return bankAccountID;
   }
-
-  public String getOwnerID() {
-    return ownerID;
-  }
-
-  public List<Transaction> getTransactions() {
-    return transactions;
-  }
-
-  public Double getBalance() {
-    return balance;
-  }
+  
 
   public static class Transaction{
     private final String identity;
