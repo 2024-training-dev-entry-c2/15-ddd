@@ -4,7 +4,11 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class InvestigationStarted extends DomainEvent {
 
-  private final String incidentId;
+  private String incidentId;
+
+  public InvestigationStarted(){
+    super(EventsEnum.INVESTIGATION_STARTED.name());
+  }
 
   public InvestigationStarted(String incidentId) {
     super(EventsEnum.INVESTIGATION_STARTED.name());
@@ -13,5 +17,9 @@ public class InvestigationStarted extends DomainEvent {
 
   public String getIncidentId() {
     return incidentId;
+  }
+
+  public void setIncidentId(String incidentId) {
+    this.incidentId = incidentId;
   }
 }

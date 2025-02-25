@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.incident.addclue;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.incident.Incident;
 import com.buildingclue.gameDynamics.domain.incident.values.Clue;
 import com.buildingclue.gameDynamics.domain.incident.values.IncidentId;
@@ -8,9 +8,9 @@ import com.buildingclue.shared.application.ICommandUseCase;
 import reactor.core.publisher.Mono;
 
 public class AddClueUseCase implements ICommandUseCase<AddClueRequest, Mono<AddClueResponse>> {
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public AddClueUseCase(IEventsRepository eventsRepository) {
+  public AddClueUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

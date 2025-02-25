@@ -4,9 +4,13 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class TurnEnded extends DomainEvent {
 
-  private final String playerId;
-  private final Integer turnNumber;
-  private final String reason;
+  private String playerId;
+  private Integer turnNumber;
+  private String reason;
+
+  public TurnEnded(){
+    super(EventsEnum.TURN_ENDED.name());
+  }
 
   public TurnEnded(String playerId, Integer turnNumber, String reason) {
     super(EventsEnum.TURN_ENDED.name());
@@ -25,5 +29,17 @@ public class TurnEnded extends DomainEvent {
 
   public String getReason() {
     return reason;
+  }
+
+  public void setPlayerId(String playerId) {
+    this.playerId = playerId;
+  }
+
+  public void setTurnNumber(Integer turnNumber) {
+    this.turnNumber = turnNumber;
+  }
+
+  public void setReason(String reason) {
+    this.reason = reason;
   }
 }

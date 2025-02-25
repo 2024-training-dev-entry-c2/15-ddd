@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.incident.identifyweapon;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.incident.Incident;
 import com.buildingclue.gameDynamics.domain.incident.entities.Weapon;
 import com.buildingclue.gameDynamics.domain.incident.values.IncidentId;
@@ -11,9 +11,9 @@ import reactor.core.publisher.Mono;
 
 public class IdentifyWeaponUseCase implements ICommandUseCase<IdentifyWeaponRequest, Mono<IdentifyWeaponResponse>> {
 
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public IdentifyWeaponUseCase(IEventsRepository eventsRepository) {
+  public IdentifyWeaponUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

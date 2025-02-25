@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.game.startgame;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.game.Game;
 import com.buildingclue.gameDynamics.domain.game.entities.Board;
 import com.buildingclue.gameDynamics.domain.game.entities.Rule;
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class StartGameUseCase implements ICommandUseCase<StartGameRequest, Mono<StartGameResponse>> {
 
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public StartGameUseCase(IEventsRepository eventsRepository) {
+  public StartGameUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

@@ -3,10 +3,14 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class AccusationMade extends DomainEvent{
 
-  private final String playerId;
-  private final String accusedSuspect;
-  private final String accusedWeapon;
-  private final String accusedLocation;
+  private String playerId;
+  private String accusedSuspect;
+  private String accusedWeapon;
+  private String accusedLocation;
+
+  public AccusationMade() {
+    super(EventsEnum.ACCUSATION_MADE.name());
+  }
 
   public AccusationMade(String playerId, String accusedSuspect, String accusedWeapon, String accusedLocation) {
     super(EventsEnum.ACCUSATION_MADE.name());
@@ -30,5 +34,21 @@ public class AccusationMade extends DomainEvent{
 
   public String getAccusedLocation() {
     return accusedLocation;
+  }
+
+  public void setPlayerId(String playerId) {
+    this.playerId = playerId;
+  }
+
+  public void setAccusedSuspect(String accusedSuspect) {
+    this.accusedSuspect = accusedSuspect;
+  }
+
+  public void setAccusedWeapon(String accusedWeapon) {
+    this.accusedWeapon = accusedWeapon;
+  }
+
+  public void setAccusedLocation(String accusedLocation) {
+    this.accusedLocation = accusedLocation;
   }
 }

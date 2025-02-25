@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.incident.indetifysuspect;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.incident.Incident;
 import com.buildingclue.gameDynamics.domain.incident.entities.Suspect;
 import com.buildingclue.gameDynamics.domain.incident.values.IncidentId;
@@ -10,9 +10,9 @@ import com.buildingclue.shared.application.ICommandUseCase;
 import reactor.core.publisher.Mono;
 
 public class IdentifySuspectUseCase implements ICommandUseCase<IdentifySuspectRequest, Mono<IdentifySuspectResponse>> {
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public IdentifySuspectUseCase(IEventsRepository eventsRepository) {
+  public IdentifySuspectUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

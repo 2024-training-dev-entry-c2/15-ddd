@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.incident.indetifysuspect;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.game.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.shared.domain.generic.DomainEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +18,12 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IdentifySuspectUseCaseTest {
-  private IEventsRepository eventsRepository;
+  private IEventsRepositoryPort eventsRepository;
   private IdentifySuspectUseCase useCase;
 
   @BeforeEach
   void setUp() {
-    eventsRepository = Mockito.mock(IEventsRepository.class);
+    eventsRepository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new IdentifySuspectUseCase(eventsRepository);
   }
 

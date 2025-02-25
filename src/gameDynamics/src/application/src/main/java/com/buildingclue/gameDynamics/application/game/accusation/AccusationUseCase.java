@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.game.accusation;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.game.Game;
 import com.buildingclue.gameDynamics.domain.game.entities.Board;
 import com.buildingclue.gameDynamics.domain.game.entities.Rule;
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class AccusationUseCase implements ICommandUseCase<AccusationRequest, Mono<AccusationResponse>> {
 
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public AccusationUseCase(IEventsRepository eventsRepository) {
+  public AccusationUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

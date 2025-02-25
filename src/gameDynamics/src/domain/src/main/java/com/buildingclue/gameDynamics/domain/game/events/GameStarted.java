@@ -4,7 +4,11 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class GameStarted extends DomainEvent {
 
-  private final String gameId;
+  private String gameId;
+
+  public GameStarted(){
+    super(EventsEnum.GAME_STARTED.name());
+  }
 
   public GameStarted(String gameId) {
     super(EventsEnum.GAME_STARTED.name());
@@ -13,5 +17,9 @@ public class GameStarted extends DomainEvent {
 
   public String getGameId() {
     return gameId;
+  }
+
+  public void setGameId(String gameId) {
+    this.gameId = gameId;
   }
 }

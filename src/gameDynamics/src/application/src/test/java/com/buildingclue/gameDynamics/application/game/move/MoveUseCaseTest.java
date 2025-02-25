@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.game.move;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.game.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.shared.domain.generic.DomainEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,11 @@ import static org.mockito.Mockito.when;
 
 class MoveUseCaseTest {
   private MoveUseCase useCase;
-  private IEventsRepository eventsRepository;
+  private IEventsRepositoryPort eventsRepository;
 
   @BeforeEach
   void setUp() {
-    eventsRepository = Mockito.mock(IEventsRepository.class);
+    eventsRepository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new MoveUseCase(eventsRepository);
   }
 

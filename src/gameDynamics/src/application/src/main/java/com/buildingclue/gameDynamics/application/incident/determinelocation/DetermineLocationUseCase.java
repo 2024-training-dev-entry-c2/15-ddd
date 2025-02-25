@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.incident.determinelocation;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.incident.Incident;
 import com.buildingclue.gameDynamics.domain.incident.entities.Location;
 import com.buildingclue.gameDynamics.domain.incident.values.Description;
@@ -10,9 +10,9 @@ import com.buildingclue.shared.application.ICommandUseCase;
 import reactor.core.publisher.Mono;
 
 public class DetermineLocationUseCase implements ICommandUseCase<DetermineLocationRequest, Mono<DetermineLocationResponse>> {
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public DetermineLocationUseCase(IEventsRepository eventsRepository) {
+  public DetermineLocationUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

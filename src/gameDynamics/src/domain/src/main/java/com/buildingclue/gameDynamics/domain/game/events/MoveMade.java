@@ -4,9 +4,13 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class MoveMade extends DomainEvent {
 
-  private final String playerId;
-  private final String fromPosition;
-  private final String toPosition;
+  private String playerId;
+  private String fromPosition;
+  private String toPosition;
+
+  public MoveMade(){
+    super(EventsEnum.MOVE_MADE.name());
+  }
 
   public MoveMade(String playerId, String fromPosition, String toPosition) {
     super(EventsEnum.MOVE_MADE.name());
@@ -25,5 +29,17 @@ public class MoveMade extends DomainEvent {
 
   public String getToPosition() {
     return toPosition;
+  }
+
+  public void setPlayerId(String playerId) {
+    this.playerId = playerId;
+  }
+
+  public void setFromPosition(String fromPosition) {
+    this.fromPosition = fromPosition;
+  }
+
+  public void setToPosition(String toPosition) {
+    this.toPosition = toPosition;
   }
 }

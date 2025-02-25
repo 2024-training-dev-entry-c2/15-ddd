@@ -4,8 +4,12 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class WeaponIdentified extends DomainEvent {
 
-  private final String incidentId;
-  private final String weaponName;
+  private String incidentId;
+  private String weaponName;
+
+  public WeaponIdentified(){
+    super(EventsEnum.WEAPON_IDENTIFED.name());
+  }
 
   public WeaponIdentified(String incidentId, String weaponName) {
     super(EventsEnum.WEAPON_IDENTIFED.name());
@@ -19,5 +23,13 @@ public class WeaponIdentified extends DomainEvent {
 
   public String getWeaponName() {
     return weaponName;
+  }
+
+  public void setIncidentId(String incidentId) {
+    this.incidentId = incidentId;
+  }
+
+  public void setWeaponName(String weaponName) {
+    this.weaponName = weaponName;
   }
 }

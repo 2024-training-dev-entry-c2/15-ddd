@@ -4,8 +4,12 @@ import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class LocationDetermined extends DomainEvent {
 
-  private final String incidentId;
-  private final String locationName;
+  private String incidentId;
+  private String locationName;
+
+  public LocationDetermined(){
+    super(EventsEnum.LOCATION_DETERMINED.name());
+  }
 
   public LocationDetermined(String incidentId, String locationName) {
     super(EventsEnum.LOCATION_DETERMINED.name());
@@ -19,5 +23,13 @@ public class LocationDetermined extends DomainEvent {
 
   public String getLocationName() {
     return locationName;
+  }
+
+  public void setIncidentId(String incidentId) {
+    this.incidentId = incidentId;
+  }
+
+  public void setLocationName(String locationName) {
+    this.locationName = locationName;
   }
 }

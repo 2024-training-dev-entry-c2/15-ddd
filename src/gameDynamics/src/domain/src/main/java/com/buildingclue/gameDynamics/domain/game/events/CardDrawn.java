@@ -3,9 +3,13 @@ package com.buildingclue.gameDynamics.domain.game.events;
 import com.buildingclue.shared.domain.generic.DomainEvent;
 
 public class CardDrawn extends DomainEvent {
-  private final String playerId;
-  private final String cardType;
-  private final String cardName;
+  private String playerId;
+  private String cardType;
+  private String cardName;
+
+  public CardDrawn() {
+    super(EventsEnum.CARD_DRAWN.name());
+  }
 
   public CardDrawn(String playerId, String cardType, String cardName) {
     super(EventsEnum.CARD_DRAWN.name());
@@ -24,5 +28,17 @@ public class CardDrawn extends DomainEvent {
 
   public String getCardName() {
     return cardName;
+  }
+
+  public void setPlayerId(String playerId) {
+    this.playerId = playerId;
+  }
+
+  public void setCardType(String cardType) {
+    this.cardType = cardType;
+  }
+
+  public void setCardName(String cardName) {
+    this.cardName = cardName;
   }
 }

@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.game.turn;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.game.Game;
 import com.buildingclue.gameDynamics.domain.game.entities.Board;
 import com.buildingclue.gameDynamics.domain.game.entities.Rule;
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class StartTurnUseCase implements ICommandUseCase<StartTurnRequest, Mono<StartTurnResponse>> {
 
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public StartTurnUseCase(IEventsRepository eventsRepository) {
+  public StartTurnUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.game.endgame;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.gameDynamics.domain.game.Game;
 import com.buildingclue.gameDynamics.domain.game.entities.Board;
 import com.buildingclue.gameDynamics.domain.game.values.Dimensions;
@@ -16,9 +16,9 @@ import java.util.Collections;
 
 public class EndGameUseCase implements ICommandUseCase<EndGameRequest, Mono<EndGameResponse>> {
 
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public EndGameUseCase(IEventsRepository eventsRepository) {
+  public EndGameUseCase(IEventsRepositoryPort eventsRepository) {
     this.eventsRepository = eventsRepository;
   }
 

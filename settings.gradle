@@ -4,11 +4,13 @@ include ':shared:domain'
 include ':shared:application'
 include ':gameDynamics:domain'
 include ':gameDynamics:application'
+include ':gameDynamics:mongo'
+include ':gameDynamics:main-service'
 
 project(':shared:domain').projectDir = file('./src/shared/src/domain')
 project(':shared:application').projectDir = file('./src/shared/src/application')
 project(':gameDynamics:domain').projectDir = file('./src/gameDynamics/src/domain')
 project(':gameDynamics:application').projectDir = file('./src/gameDynamics/src/application')
-include 'src:gameDynamics:src:application'
-findProject(':src:gameDynamics:src:application')?.name = 'application'
+project(':gameDynamics:mongo').projectDir = file('./src/gameDynamics/src/infrastructure/driven-adapters/mongo')
+project(':gameDynamics:main-service').projectDir = file('./src/gameDynamics/src/infrastructure/driving-adapters/main-service')
 

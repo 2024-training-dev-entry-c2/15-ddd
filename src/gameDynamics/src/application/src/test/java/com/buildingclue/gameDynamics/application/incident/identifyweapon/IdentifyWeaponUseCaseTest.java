@@ -1,6 +1,6 @@
 package com.buildingclue.gameDynamics.application.incident.identifyweapon;
 
-import com.buildingclue.gameDynamics.application.game.shared.IEventsRepository;
+import com.buildingclue.gameDynamics.application.game.shared.ports.IEventsRepositoryPort;
 import com.buildingclue.shared.domain.generic.DomainEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -17,12 +16,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class IdentifyWeaponUseCaseTest {
-  private IEventsRepository eventsRepository;
+  private IEventsRepositoryPort eventsRepository;
   private IdentifyWeaponUseCase useCase;
 
   @BeforeEach
   void setUp() {
-    eventsRepository = Mockito.mock(IEventsRepository.class);
+    eventsRepository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new IdentifyWeaponUseCase(eventsRepository);
   }
 
