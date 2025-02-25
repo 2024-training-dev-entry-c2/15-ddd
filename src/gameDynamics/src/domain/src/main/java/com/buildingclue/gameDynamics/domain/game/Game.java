@@ -15,6 +15,7 @@ import com.buildingclue.gameDynamics.domain.game.values.NumberPlayers;
 import com.buildingclue.gameDynamics.domain.game.values.PlayerId;
 import com.buildingclue.shared.domain.constants.States;
 import com.buildingclue.shared.domain.generic.AggregateRoot;
+import com.buildingclue.shared.domain.generic.DomainEvent;
 
 import java.util.List;
 
@@ -46,6 +47,20 @@ public class Game extends AggregateRoot<GameId> {
     return new Game(id, state, board, rules, turns, players);
   }
 
+  public static Game rebuildGame(GameId gameId, List<DomainEvent> events) {
+    Game game = new Game(gameId, GameState.of(States.WAITING), null, null, null, new NumberPlayers(2));
+    events.forEach(game::applyEvent);
+    return game;
+  }
+
+  private void applyEvent(DomainEvent event) {
+    if (event instanceof GameStarted) {
+      this.state = GameState.of(States.IN_PROGRESS);
+    }
+    if (event instanceof GameOver) {
+      this.state = GameState.of(States.FINISHED);
+    }
+  }
 
   public GameState getState() {
     return state;

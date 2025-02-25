@@ -8,6 +8,14 @@ public class AccusationRequest extends Request {
   private final String weapon;
   private final String location;
 
+  public AccusationRequest(){
+    super(null);
+    this.playerId = null;
+    this.suspect = null;
+    this.weapon = null;
+    this.location = null;
+  }
+
   public AccusationRequest(String aggregateId, String playerId, String suspect, String weapon, String location) {
     super(aggregateId);
     this.playerId = playerId;
