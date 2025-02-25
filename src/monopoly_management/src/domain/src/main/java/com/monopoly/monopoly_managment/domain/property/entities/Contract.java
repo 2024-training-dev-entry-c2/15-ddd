@@ -22,6 +22,10 @@ public class Contract extends Entity<ContractId> {
     this.isActive = isActive;
   }
 
+  public Contract(ContractId identity) {
+    super(identity);
+  }
+
   public Contract(TypeContrat type, Rate rate, Parties parties, IsActive isActive) {
     super(new ContractId());
     this.type = type;

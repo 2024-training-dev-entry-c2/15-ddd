@@ -1,7 +1,14 @@
 package com.monopoly.shared.application;
 
 public abstract class Request {
-    private final String aggregateId;
+    private String aggregateId;
+
+    protected Request() {
+    }
+
+    public void setAggregateId(String aggregateId) {
+        this.aggregateId = aggregateId;
+    }
 
     protected Request(String aggregateId) {
         this.aggregateId = aggregateId;

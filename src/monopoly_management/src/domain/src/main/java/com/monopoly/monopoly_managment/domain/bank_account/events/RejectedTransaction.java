@@ -4,12 +4,12 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class RejectedTransaction extends DomainEvent {
-  private final String ownerId;
-  private final String transactionId;
-  private final TypeEnum type;
-  private final Double amount;
-  private final String origin;
-  private final String destiny;
+  private String ownerId;
+  private String transactionId;
+  private TypeEnum type;
+  private Double amount;
+  private String origin;
+  private String destiny;
 
   public RejectedTransaction(String ownerId, String transactionId, TypeEnum type, Double amount, String origin, String destiny) {
     super(EventsEnum.REJECTED_TRANSACTION.name() );
@@ -19,6 +19,10 @@ public class RejectedTransaction extends DomainEvent {
     this.amount = amount;
     this.origin = origin;
     this.destiny = destiny;
+  }
+
+  public RejectedTransaction(String name) {
+    super(name);
   }
 
   public String getOwnerId() {
@@ -43,5 +47,29 @@ public class RejectedTransaction extends DomainEvent {
 
   public String getDestiny() {
     return destiny;
+  }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
+
+  public void setOrigin(String origin) {
+    this.origin = origin;
+  }
+
+  public void setDestiny(String destiny) {
+    this.destiny = destiny;
   }
 }

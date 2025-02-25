@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.banck_account.registertransaction;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.bank_account.events.CompletedTransaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.CreatedBankAccount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreateTransactionRequestTest {
   private final CreateTransactionUseCase useCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public CreateTransactionRequestTest() {
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new CreateTransactionUseCase(repository);
   }
 

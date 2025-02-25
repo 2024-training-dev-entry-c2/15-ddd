@@ -3,11 +3,19 @@ package com.monopoly.monopoly_managment.application.banck_account.createbankacco
 import com.monopoly.shared.application.Request;
 
 public class CreateBankAccountRequest extends Request {
-  private final String owner;
+  private String owner;
 
-  CreateBankAccountRequest(String owner) {
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
+
+  public CreateBankAccountRequest(String owner) {
     super(null);
     this.owner = owner;
+  }
+
+  public CreateBankAccountRequest(){
+    super(null);
   }
 
   public String getOwnerId() {

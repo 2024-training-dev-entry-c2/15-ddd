@@ -2,15 +2,15 @@ package com.monopoly.monopoly_managment.application.banck_account.createbankacco
 
 import com.monopoly.monopoly_managment.application.banck_account.shared.BankAccountMapper;
 import com.monopoly.monopoly_managment.application.banck_account.shared.BankAccountResponse;
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.bank_account.BankAccount;
 import com.monopoly.shared.application.ICommandUseCase;
 import reactor.core.publisher.Mono;
 
 public class CreateBankAccountUseCase implements ICommandUseCase<CreateBankAccountRequest, Mono<BankAccountResponse>> {
-  private final IEventsRepository eventsRepository;
+  private final IEventsRepositoryPort eventsRepository;
 
-  public CreateBankAccountUseCase(IEventsRepository eventsRepository) {this.eventsRepository = eventsRepository;}
+  public CreateBankAccountUseCase(IEventsRepositoryPort eventsRepository) {this.eventsRepository = eventsRepository;}
 
   @Override
   public Mono<BankAccountResponse> execute(CreateBankAccountRequest request) {

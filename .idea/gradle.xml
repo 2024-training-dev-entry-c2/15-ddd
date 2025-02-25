@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/shared" />
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/monopoly_management/src/application" />
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/monopoly_management/src/domain" />
+            <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/monopoly_management/src/infrastructure/driven-adapters/mongo" />
+            <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/monopoly_management/src/infrastructure/driving-adapters/main-service" />
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/shared/src/application" />
             <option value="$PROJECT_DIR$/../../../../../../../Informática/Trabajos/Sofka/SofkaU/Proyectos/ddd/15-ddd/src/shared/src/domain" />
           </set>

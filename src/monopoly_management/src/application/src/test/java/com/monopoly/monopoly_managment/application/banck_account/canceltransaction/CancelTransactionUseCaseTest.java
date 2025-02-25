@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.banck_account.canceltransaction;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.bank_account.events.CompletedTransaction;
 import com.monopoly.monopoly_managment.domain.bank_account.events.CreatedBankAccount;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CancelTransactionUseCaseTest {
   private final CancelTransactionUseCase useCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public CancelTransactionUseCaseTest(){
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new CancelTransactionUseCase(repository);
   }
 

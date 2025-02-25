@@ -21,6 +21,10 @@ public class Transaction extends Entity<TransactionId> {
     validate();
   }
 
+  public Transaction(TransactionId identity) {
+    super(identity);
+  }
+
   public Transaction(Double amount, TypeEnum type, String destiny, String origin) {
     super(new TransactionId());
     this.amount = amount;

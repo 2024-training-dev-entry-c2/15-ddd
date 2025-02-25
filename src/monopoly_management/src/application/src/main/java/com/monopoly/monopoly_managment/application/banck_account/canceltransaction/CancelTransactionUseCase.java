@@ -2,15 +2,18 @@ package com.monopoly.monopoly_managment.application.banck_account.canceltransact
 
 import com.monopoly.monopoly_managment.application.banck_account.shared.BankAccountMapper;
 import com.monopoly.monopoly_managment.application.banck_account.shared.BankAccountResponse;
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.bank_account.BankAccount;
 import com.monopoly.shared.application.ICommandUseCase;
+import com.monopoly.shared.domain.generic.DomainEvent;
 import reactor.core.publisher.Mono;
 
-public class CancelTransactionUseCase implements ICommandUseCase<CancelTransactionRequest, Mono<BankAccountResponse>> {
-  private final IEventsRepository repository;
+import java.util.Comparator;
 
-  public CancelTransactionUseCase(IEventsRepository repository) {
+public class CancelTransactionUseCase implements ICommandUseCase<CancelTransactionRequest, Mono<BankAccountResponse>> {
+  private final IEventsRepositoryPort repository;
+
+  public CancelTransactionUseCase(IEventsRepositoryPort repository) {
     this.repository = repository;
   }
 
@@ -20,6 +23,7 @@ public class CancelTransactionUseCase implements ICommandUseCase<CancelTransacti
       .findEventsByAggregateId(request.getAggregateId())
       .collectList()
       .map(events ->{
+        events.sort(Comparator.comparing(DomainEvent::getWhen));
         BankAccount bankAccount = BankAccount.from(request.getAggregateId(), request.getOwnerId(), events);
         bankAccount.canceledTransaction(bankAccount.getOwnerId(), request.getTransactionId(), request.getType(), request.getAmount(), request.getOrigin(), request.getDestiny());
         bankAccount.getUncommittedEvents().forEach(repository::save);

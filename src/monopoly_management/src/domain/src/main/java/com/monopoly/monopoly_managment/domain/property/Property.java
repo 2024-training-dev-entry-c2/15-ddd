@@ -37,9 +37,10 @@ public class Property extends AggregateRoot<PropertyId> {
 
   public Property() {
     super(new PropertyId());
-    apply(new CreatedProperty("contractId", "MortgageId", "propertyId", "updateId","name", 0.0,"BROWN"));
     subscribe(new PropertyHandler(this));
   }
+
+
   // endregion
 
   // region Getters and Setters
@@ -109,8 +110,8 @@ public class Property extends AggregateRoot<PropertyId> {
   // endregion
 
   // region Domain Actions
-  public void createdProperty(String contractId, String mortgageId, String ownerId,String updateId ,String name, Double price, String colorGroup) {
-    apply(new CreatedProperty(contractId, mortgageId, ownerId, updateId,name, price, colorGroup));
+  public void createdProperty(String contractId, String mortgageId, String ownerId,String updateId ,String title, Double price, String colorGroup) {
+    apply(new CreatedProperty(contractId, mortgageId, ownerId, updateId,title, price, colorGroup));
   }
 
   public void madeImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {

@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.property.madeimprovement;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.property.events.CreatedProperty;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MadeImprovementUseCaseTest {
   private final MadeImprovementUseCase useCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public MadeImprovementUseCaseTest() {
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new MadeImprovementUseCase(repository);
   }
 

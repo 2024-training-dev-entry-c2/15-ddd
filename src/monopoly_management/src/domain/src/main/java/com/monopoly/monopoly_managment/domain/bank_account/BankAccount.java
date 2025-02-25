@@ -26,7 +26,6 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // region Constructors
   public BankAccount() {
     super(new BankAccountId());
-    apply(new CreatedBankAccount("defaultId", "ownerId"));
     subscribe(new BankAccountHandler(this));
   }
 

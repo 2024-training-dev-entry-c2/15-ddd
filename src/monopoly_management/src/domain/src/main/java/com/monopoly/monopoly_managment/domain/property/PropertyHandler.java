@@ -36,7 +36,7 @@ public class PropertyHandler extends DomainActionsContainer {
     public Consumer<? extends DomainEvent> createProperty(){
       return (CreatedProperty event) -> {
         property.setOwner(event.getOwnerId());
-        property.setName(Name.of(event.getName()));
+        property.setName(Name.of(event.getTitle()));
         property.setPrice(Price.of(event.getPrice()));
         property.setColorGroup(ColorGroup.of(event.getColorGroup()));
         property.setContract(ContractId.of(event.getContractId()));

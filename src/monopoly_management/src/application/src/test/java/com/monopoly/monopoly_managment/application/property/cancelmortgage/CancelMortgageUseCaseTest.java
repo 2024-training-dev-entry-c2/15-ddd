@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.property.cancelmortgage;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.property.events.CreatedProperty;
 import com.monopoly.monopoly_managment.domain.property.events.MortgageConstituted;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CancelMortgageUseCaseTest {
   private final CancelMortgageUseCase cancelMortgageUseCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public CancelMortgageUseCaseTest() {
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     cancelMortgageUseCase = new CancelMortgageUseCase(repository);
   }
 

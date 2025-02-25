@@ -4,7 +4,7 @@ import com.monopoly.shared.application.Request;
 
 public class RemoveOwnerRequest extends Request {
 
-  private final String ownerId;
+  private String ownerId;
 
 
   public RemoveOwnerRequest(String aggregateId, String ownerId) {
@@ -12,6 +12,10 @@ public class RemoveOwnerRequest extends Request {
 
     this.ownerId = ownerId;
 
+  }
+
+  public RemoveOwnerRequest(){
+    super(null);
   }
 
   public String getOwnerId() {

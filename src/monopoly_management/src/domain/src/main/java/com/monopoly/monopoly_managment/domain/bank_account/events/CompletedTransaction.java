@@ -5,13 +5,13 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class CompletedTransaction extends DomainEvent {
-  private final String accountId;
-  private final String ownerId;
-  private final String transactionId;
-  private final TypeEnum type;
-  private final Double amount;
-  private final String origin;
-  private final String destiny;
+  private String accountId;
+  private String ownerId;
+  private String transactionId;
+  private TypeEnum type;
+  private Double amount;
+  private String origin;
+  private String destiny;
 
   public CompletedTransaction(String accountId, String ownerId, String transactionId, TypeEnum type, Double amount, String origin, String destiny) {
     super(EventsEnum.COMPLETED_TRANSACTION.name() );
@@ -22,6 +22,10 @@ public class CompletedTransaction extends DomainEvent {
     this.amount = amount;
     this.origin = origin;
     this.destiny = destiny;
+  }
+
+  public CompletedTransaction(String name) {
+    super(name);
   }
 
   public String getAccountId() {
@@ -49,5 +53,33 @@ public class CompletedTransaction extends DomainEvent {
   }
   public String getDestiny() {
     return destiny;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
+
+  public void setOrigin(String origin) {
+    this.origin = origin;
+  }
+
+  public void setDestiny(String destiny) {
+    this.destiny = destiny;
   }
 }

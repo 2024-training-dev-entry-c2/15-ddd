@@ -4,13 +4,16 @@ import com.monopoly.monopoly_managment.application.property.shared.PropertyMappe
 import com.monopoly.monopoly_managment.application.property.shared.PropertyResponse;
 import com.monopoly.monopoly_managment.domain.property.Property;
 import com.monopoly.shared.application.ICommandUseCase;
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
+import com.monopoly.shared.domain.generic.DomainEvent;
 import reactor.core.publisher.Mono;
 
-public class AssignOwnerUseCase implements ICommandUseCase<AssignOwnerRequest, Mono<PropertyResponse>> {
-private final IEventsRepository repository;
+import java.util.Comparator;
 
-  public AssignOwnerUseCase(IEventsRepository repository) {
+public class AssignOwnerUseCase implements ICommandUseCase<AssignOwnerRequest, Mono<PropertyResponse>> {
+private final IEventsRepositoryPort repository;
+
+  public AssignOwnerUseCase(IEventsRepositoryPort repository) {
     this.repository = repository;
   }
 
@@ -20,6 +23,7 @@ private final IEventsRepository repository;
       .findEventsByAggregateId(request.getAggregateId())
       .collectList()
       .map(events ->{
+        events.sort(Comparator.comparing(DomainEvent::getWhen));
         Property property = Property.from(request.getAggregateId(), events);
         property.assignedOwner(request.getOwnerId(),request.getPropertyId() );
         property.getUncommittedEvents().forEach(repository::save);

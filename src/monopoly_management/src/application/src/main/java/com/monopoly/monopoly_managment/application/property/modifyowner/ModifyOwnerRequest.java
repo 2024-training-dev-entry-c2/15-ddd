@@ -3,15 +3,19 @@ package com.monopoly.monopoly_managment.application.property.modifyowner;
 import com.monopoly.shared.application.Request;
 
 public class ModifyOwnerRequest extends Request {
-  private final String previousOwnerId;
-  private final String ownerId;
-  private final String propertyId;
+  private String previousOwnerId;
+  private String ownerId;
+  private String propertyId;
 
   public ModifyOwnerRequest(String aggregateId, String previousOwnerId,String ownerId, String propertyId) {
     super(aggregateId);
     this.previousOwnerId = previousOwnerId;
     this.ownerId = ownerId;
     this.propertyId = propertyId;
+  }
+
+  public ModifyOwnerRequest(){
+    super(null);
   }
 
   public String getOwnerId() {

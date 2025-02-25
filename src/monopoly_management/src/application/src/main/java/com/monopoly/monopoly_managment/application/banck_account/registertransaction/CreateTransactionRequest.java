@@ -4,10 +4,10 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.application.Request;
 
 public class CreateTransactionRequest extends Request {
-  private final Double amount;
-  private final TypeEnum type;
-  private final String destiny;
-  private final String origin;
+  private Double amount;
+  private TypeEnum type;
+  private String destiny;
+  private String origin;
 
   public CreateTransactionRequest(String aggregateId, Double amount, TypeEnum type, String destiny, String origin) {
     super(aggregateId);
@@ -15,6 +15,10 @@ public class CreateTransactionRequest extends Request {
     this.type = type;
     this.destiny = destiny;
     this.origin = origin;
+  }
+
+  public CreateTransactionRequest(){
+    super(null);
   }
 
   public Double getAmount() {

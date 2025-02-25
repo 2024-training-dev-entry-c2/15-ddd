@@ -4,12 +4,24 @@ import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class OwnerRemoved extends DomainEvent {
 
-  private final String ownerId;
-  private final String propertyId;
+  private String ownerId;
+  private String propertyId;
 
   public OwnerRemoved(String ownerId, String propertyId) {
     super(EventsEnum.OWNER_REMOVED.name() );
     this.ownerId = ownerId;
+    this.propertyId = propertyId;
+  }
+
+  public OwnerRemoved(String name) {
+    super(name);
+  }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public void setPropertyId(String propertyId) {
     this.propertyId = propertyId;
   }
 

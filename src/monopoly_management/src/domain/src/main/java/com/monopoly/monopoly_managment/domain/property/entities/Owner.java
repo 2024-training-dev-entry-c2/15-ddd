@@ -26,7 +26,11 @@ public class Owner extends Entity<OwnerId> {
     this.wealth = wealth;
   }
 
-  public Owner( Alias alias, Token token, Portfolio portfolio, Wealth wealth) {
+  public Owner(OwnerId identity) {
+    super(identity);
+  }
+
+  public Owner(Alias alias, Token token, Portfolio portfolio, Wealth wealth) {
     super(new OwnerId());
     this.alias = alias;
     this.token = token;

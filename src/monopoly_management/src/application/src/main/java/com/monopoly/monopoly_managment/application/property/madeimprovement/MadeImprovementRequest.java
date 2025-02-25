@@ -4,10 +4,10 @@ import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnu
 import com.monopoly.shared.application.Request;
 
 public class MadeImprovementRequest extends Request {
-  private final String improvementId;
-  private final String propertyId;
-  private final TypeImprovementEnum type;
-  private final Double cost;
+  private String improvementId;
+  private String propertyId;
+  private TypeImprovementEnum type;
+  private Double cost;
 
   public MadeImprovementRequest(String aggregateId, String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
     super(aggregateId);
@@ -15,6 +15,10 @@ public class MadeImprovementRequest extends Request {
     this.propertyId = propertyId;
     this.type = type;
     this.cost = cost;
+  }
+
+  public MadeImprovementRequest() {
+    super(null);
   }
 
   public String getImprovementId() {

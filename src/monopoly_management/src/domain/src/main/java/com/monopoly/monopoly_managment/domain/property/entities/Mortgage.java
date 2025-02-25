@@ -18,6 +18,10 @@ public class Mortgage extends Entity<MortgageId> {
     this.cancellationCost = cancellationCost;
   }
 
+  public Mortgage(MortgageId identity) {
+    super(identity);
+  }
+
   public Value getValue() {
     return value;
   }

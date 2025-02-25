@@ -4,12 +4,12 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.application.Request;
 
 public class CancelTransactionRequest extends Request {
-  private final String ownerId;
-  private final String transactionId;
-  private final TypeEnum type;
-  private final Double amount;
-  private final String origin;
-  private final String destiny;
+  private String ownerId;
+  private String transactionId;
+  private TypeEnum type;
+  private Double amount;
+  private String origin;
+  private String destiny;
 
   public CancelTransactionRequest(String aggregateId, String ownerId, String transactionId, TypeEnum type, Double amount, String origin, String destiny) {
     super(aggregateId);
@@ -19,6 +19,10 @@ public class CancelTransactionRequest extends Request {
     this.amount = amount;
     this.origin = origin;
     this.destiny = destiny;
+  }
+
+  public CancelTransactionRequest() {
+    super(null);
   }
 
   public String getOwnerId() {

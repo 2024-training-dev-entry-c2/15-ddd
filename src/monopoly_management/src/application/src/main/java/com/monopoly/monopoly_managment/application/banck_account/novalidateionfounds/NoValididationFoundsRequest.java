@@ -4,10 +4,10 @@ import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.application.Request;
 
 public class NoValididationFoundsRequest extends Request {
-  private final String transactionId;
-  private final Double amount;
-  private final TypeEnum type;
-  private final String ownerId;
+  private String transactionId;
+  private Double amount;
+  private TypeEnum type;
+  private String ownerId;
 
   public NoValididationFoundsRequest(String aggregateId, String transactionId, Double amount, TypeEnum type, String ownerId) {
     super(aggregateId);
@@ -15,6 +15,10 @@ public class NoValididationFoundsRequest extends Request {
     this.amount = amount;
     this.type = type;
     this.ownerId = ownerId;
+  }
+
+  public NoValididationFoundsRequest() {
+    super(null);
   }
 
   public String getTransactionId() {

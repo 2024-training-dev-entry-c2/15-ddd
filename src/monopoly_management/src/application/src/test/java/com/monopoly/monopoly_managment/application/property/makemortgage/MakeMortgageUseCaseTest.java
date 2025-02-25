@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.property.makemortgage;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.property.events.CreatedProperty;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MakeMortgageUseCaseTest {
   private final MakeMortgageUseCase makeMortgageUseCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public MakeMortgageUseCaseTest() {
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     makeMortgageUseCase = new MakeMortgageUseCase(repository);
   }
 

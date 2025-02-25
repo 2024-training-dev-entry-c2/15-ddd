@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.banck_account.createbankaccount;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import reactor.test.StepVerifier;
@@ -11,7 +11,7 @@ class CreateBankAccountUseCaseTest {
   private final CreateBankAccountUseCase useCase;
 
   CreateBankAccountUseCaseTest() {
-    IEventsRepository repository = Mockito.mock(IEventsRepository.class);
+    IEventsRepositoryPort repository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new CreateBankAccountUseCase(repository);
   }
 

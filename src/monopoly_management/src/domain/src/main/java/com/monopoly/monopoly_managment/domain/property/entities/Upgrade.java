@@ -22,7 +22,11 @@ public class Upgrade extends Entity<UpgradeId> {
     this.cost = cost;
   }
 
-  public Upgrade( TypeImprovement typeImprovement, DevelopmentLevel developmentLevel, PropertyId propertyId, Cost cost) {
+  public Upgrade(UpgradeId identity) {
+    super(identity);
+  }
+
+  public Upgrade(TypeImprovement typeImprovement, DevelopmentLevel developmentLevel, PropertyId propertyId, Cost cost) {
     super(new UpgradeId());
     this.typeImprovement = typeImprovement;
     this.developmentLevel = developmentLevel;

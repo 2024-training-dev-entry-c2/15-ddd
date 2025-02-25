@@ -27,7 +27,7 @@ public abstract class DomainEvent {
     return uuid;
   }
 
-  public String getName() {
+  public String getTitle() {
     return name;
   }
 

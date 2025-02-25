@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.property.demolishimprovement;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.property.events.CreatedProperty;
 import com.monopoly.monopoly_managment.domain.property.events.MadeImprovement;
 import com.monopoly.monopoly_managment.domain.property.values.TypeImprovementEnum;
@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DemolishImprovementUseCaseTest {
   private final DemolishImprovementUseCase useCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public DemolishImprovementUseCaseTest() {
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     useCase = new DemolishImprovementUseCase(repository);
   }
 

@@ -1,6 +1,6 @@
 package com.monopoly.monopoly_managment.application.property.removedowner;
 
-import com.monopoly.monopoly_managment.application.shared.repositories.IEventsRepository;
+import com.monopoly.monopoly_managment.application.shared.ports.IEventsRepositoryPort;
 import com.monopoly.monopoly_managment.domain.property.events.CreatedProperty;
 import com.monopoly.monopoly_managment.domain.property.events.OwnerAssigned;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RemoveOwnerUseCaseTest {
   private final RemoveOwnerUseCase removeOwnerUseCase;
-  private final IEventsRepository repository;
+  private final IEventsRepositoryPort repository;
 
   public RemoveOwnerUseCaseTest() {
-    repository = Mockito.mock(IEventsRepository.class);
+    repository = Mockito.mock(IEventsRepositoryPort.class);
     removeOwnerUseCase = new RemoveOwnerUseCase(repository);
   }
 
