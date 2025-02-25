@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/cancel-transaction")
+@RequestMapping("/api/canceltransaction")
 public class CancelTransaction {
   private final CancelTransactionUseCase cancelTransactionUseCase;
 

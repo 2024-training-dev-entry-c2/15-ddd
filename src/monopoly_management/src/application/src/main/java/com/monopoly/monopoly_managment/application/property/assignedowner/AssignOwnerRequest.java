@@ -23,4 +23,12 @@ public class AssignOwnerRequest extends Request {
   public String getPropertyId() {
     return propertyId;
   }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public void setPropertyId(String propertyId) {
+    this.propertyId = propertyId;
+  }
 }

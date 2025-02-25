@@ -14,8 +14,8 @@ public class MortgageConstituted extends DomainEvent {
     this.amount = amount;
   }
 
-  public MortgageConstituted(String name) {
-    super(name);
+  public MortgageConstituted() {
+    super(EventsEnum.MORTGAGE_CONSTITUTED.name() );
   }
 
   public void setOwnerId(String ownerId) {

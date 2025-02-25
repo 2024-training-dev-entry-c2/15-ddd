@@ -3,32 +3,34 @@ package com.monopoly.monopoly_managment.domain.bank_account.events;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class CreatedBankAccount extends DomainEvent {
-  private String bankAccountId;
+  private String identity;
   private String ownerId;
 
-  public CreatedBankAccount(String bankAccountId, String ownerId) {
+  public CreatedBankAccount(String identity, String ownerId) {
     super(EventsEnum.CREATED_BANK_ACCOUNT.name());
-    this.bankAccountId = bankAccountId;
+    this.identity = identity;
     this.ownerId = ownerId;
   }
 
-  public CreatedBankAccount(String name) {
-    super(name);
+  public CreatedBankAccount() {
+    super(EventsEnum.CREATED_BANK_ACCOUNT.name());
   }
 
-  public String getBankAccountId() {
-    return bankAccountId;
+  public String getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(String identity) {
+    this.identity = identity;
   }
 
   public String getOwnerId() {
     return ownerId;
   }
 
-  public void setBankAccountId(String bankAccountId) {
-    this.bankAccountId = bankAccountId;
-  }
-
   public void setOwnerId(String ownerId) {
     this.ownerId = ownerId;
   }
+
+
 }

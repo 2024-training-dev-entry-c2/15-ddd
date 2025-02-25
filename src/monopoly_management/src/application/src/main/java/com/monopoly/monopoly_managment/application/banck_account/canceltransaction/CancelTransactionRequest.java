@@ -48,4 +48,28 @@ public class CancelTransactionRequest extends Request {
   public String getDestiny() {
     return destiny;
   }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
+
+  public void setOrigin(String origin) {
+    this.origin = origin;
+  }
+
+  public void setDestiny(String destiny) {
+    this.destiny = destiny;
+  }
 }

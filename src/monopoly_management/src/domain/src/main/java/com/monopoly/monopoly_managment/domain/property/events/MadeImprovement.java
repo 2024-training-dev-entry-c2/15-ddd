@@ -17,8 +17,8 @@ public class MadeImprovement extends DomainEvent {
     this.cost = cost;
   }
 
-  public MadeImprovement(String name) {
-    super(name);
+  public MadeImprovement() {
+    super(EventsEnum.MADE_IMPROVEMENT.name() );
   }
 
   public void setImprovementId(String improvementId) {

@@ -36,4 +36,20 @@ public class NoValididationFoundsRequest extends Request {
   public String getOwnerId() {
     return ownerId;
   }
+
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
 }

@@ -15,8 +15,8 @@ public class NotValidatedFounds extends DomainEvent {
     this.type = type;
   }
 
-  public NotValidatedFounds(String name) {
-    super(name);
+  public NotValidatedFounds() {
+    super(EventsEnum.NOT_VALIDATED_FOUNDS.name());
   }
 
   public String getTransactionId() {

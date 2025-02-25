@@ -12,8 +12,8 @@ public class OwnerAssigned extends DomainEvent {
     this.propertyId = propertyId;
   }
 
-  public OwnerAssigned(String name) {
-    super(name);
+  public OwnerAssigned() {
+    super(EventsEnum.OWNER_ASSIGNED.name() );
   }
 
   public void setOwnerId(String ownerId) {

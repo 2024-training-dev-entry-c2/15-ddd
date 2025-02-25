@@ -29,7 +29,7 @@ public class BankAccountHandler extends DomainActionsContainer {
 
   public Consumer<? extends DomainEvent> createdBankAccount(){
     return (CreatedBankAccount event) -> {
-      bankAccount.setBalance(new Balance(0.0));
+      bankAccount.setBalance(new Balance(2000.0));
       bankAccount.setTransactions(new ArrayList<>());
       bankAccount.setOwnerId(event.getOwnerId());
     };
@@ -41,7 +41,6 @@ public class BankAccountHandler extends DomainActionsContainer {
         Transaction transaction = new Transaction(
           TransactionId.of(event.getTransactionId()), event.getAmount(), event.getType(), event.getDestiny(), event.getOrigin()
         );
-        bankAccount.validateTransaction(transaction);
         switch (transaction.getTransactionType()) {
           case DEPOSIT -> bankAccount.plusBalance(event.getAmount());
           case RETIREMENT -> bankAccount.minusBalance(transaction.getAmount());

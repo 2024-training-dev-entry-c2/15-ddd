@@ -81,4 +81,8 @@ public class CreatePropertyRequest extends Request {
   public String getColorGroup() {
     return colorGroup;
   }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
 }

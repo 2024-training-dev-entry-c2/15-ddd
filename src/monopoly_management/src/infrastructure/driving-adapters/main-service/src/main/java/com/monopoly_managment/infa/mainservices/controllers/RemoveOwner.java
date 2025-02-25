@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/removeOwner")
+@RequestMapping("/api/removeOwner")
 public class RemoveOwner {
   private final RemoveOwnerUseCase removeOwnerUseCase;
 

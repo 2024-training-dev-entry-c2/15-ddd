@@ -14,8 +14,8 @@ public class MortgageCanceled extends DomainEvent {
     this.amount = amount;
   }
 
-  public MortgageCanceled(String name) {
-    super(name);
+  public MortgageCanceled() {
+    super(EventsEnum.MORTGAGE_CANCELLED.name() );
   }
 
   public void setOwnerId(String ownerId) {

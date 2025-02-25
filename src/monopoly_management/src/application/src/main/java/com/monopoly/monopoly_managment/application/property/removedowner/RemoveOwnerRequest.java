@@ -21,4 +21,8 @@ public class RemoveOwnerRequest extends Request {
   public String getOwnerId() {
     return ownerId;
   }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
 }

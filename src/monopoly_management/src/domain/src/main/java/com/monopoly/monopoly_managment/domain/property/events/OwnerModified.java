@@ -14,8 +14,8 @@ public class OwnerModified extends DomainEvent {
     this.previousOwnerId = previousOwnerId;
   }
 
-  public OwnerModified(String name) {
-    super(name);
+  public OwnerModified() {
+    super(EventsEnum.OWNER_MODIFIED.name() );
   }
 
   public void setOwnerId(String ownerId) {

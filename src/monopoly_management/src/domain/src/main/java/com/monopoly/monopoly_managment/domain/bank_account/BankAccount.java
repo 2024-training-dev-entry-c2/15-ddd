@@ -26,11 +26,13 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
   // region Constructors
   public BankAccount() {
     super(new BankAccountId());
+    this.balance = new Balance(0.0);
     subscribe(new BankAccountHandler(this));
   }
 
   private BankAccount(BankAccountId identity) {
     super(identity);
+    this.balance = new Balance(0.0);
     subscribe(new BankAccountHandler(this));
   }
   // endregion
@@ -66,7 +68,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     apply(new CreatedBankAccount(identity, ownerID));
   }
 
-  public void registeredTransaction(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Double amount, String origin, String destiny){
+  public void registeredTransaction(BankAccountId accountId, OwnerId ownerId, TransactionId transactionId, TypeEnum type, Double amount, String origin, String destiny) {
     apply(new CompletedTransaction(accountId.getValue(), ownerId.getValue(), transactionId.getValue(), type, amount, origin, destiny));
   }
 
@@ -93,10 +95,11 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     this.balance = new Balance(this.balance.getValue() - amount);
   }
 
-  public void validateTransaction(Transaction transaction){
-    transaction.isEnoughFunds(transaction, this.balance);
-    }
+//  public void validateTransaction(Transaction transaction){
+//    transaction.isEnoughFunds(transaction, this.balance);
+//    }
   // endregion
+
 
   public static BankAccount from(final String identity,final String ownerId, final List<DomainEvent> domainEvents) {
     BankAccount bankAccount = new BankAccount(BankAccountId.of(identity));

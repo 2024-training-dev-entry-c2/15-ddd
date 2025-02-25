@@ -36,4 +36,20 @@ public class CreateTransactionRequest extends Request {
   public String getOrigin() {
     return origin;
   }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
+  public void setDestiny(String destiny) {
+    this.destiny = destiny;
+  }
+
+  public void setOrigin(String origin) {
+    this.origin = origin;
+  }
 }

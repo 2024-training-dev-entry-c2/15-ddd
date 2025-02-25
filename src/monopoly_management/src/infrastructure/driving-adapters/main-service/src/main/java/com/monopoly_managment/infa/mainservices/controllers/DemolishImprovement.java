@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/demolishimprovement")
+@RequestMapping("/api/demolishimprovement")
 public class DemolishImprovement {
   private final DemolishImprovementUseCase demolishImprovementUseCase;
 

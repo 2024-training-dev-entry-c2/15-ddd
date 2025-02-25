@@ -24,8 +24,8 @@ public class CompletedTransaction extends DomainEvent {
     this.destiny = destiny;
   }
 
-  public CompletedTransaction(String name) {
-    super(name);
+  public CompletedTransaction() {
+    super(EventsEnum.COMPLETED_TRANSACTION.name() );
   }
 
   public String getAccountId() {

@@ -15,7 +15,7 @@ public class CreateBankAccountUseCase implements ICommandUseCase<CreateBankAccou
   @Override
   public Mono<BankAccountResponse> execute(CreateBankAccountRequest request) {
     BankAccount bankAccount = new BankAccount();
-    bankAccount.createdBankAccount(request.getAggregateId(),request.getOwnerId());
+    bankAccount.createdBankAccount(request.getAggregateId(),request.getOwner());
     bankAccount.getUncommittedEvents().forEach(eventsRepository::save);
     bankAccount.markEventsAsCommitted();
     return Mono.just(BankAccountMapper.toResponse(bankAccount));

@@ -32,11 +32,19 @@ public class Property extends AggregateRoot<PropertyId> {
   // region Constructors
   private Property(PropertyId identity) {
     super(identity);
+    this.improvements = new UpgradeId();
+    this.contract = new ContractId();
+    this.mortgage = new MortgageId();
+    this.owner = new OwnerId();
+    this.name = Name.of("name");
+    this.price = Price.of(0.0);
+    this.colorGroup = ColorGroup.of("BROWN");
     subscribe(new PropertyHandler(this));
   }
 
   public Property() {
     super(new PropertyId());
+    this.improvements = new UpgradeId();
     subscribe(new PropertyHandler(this));
   }
 

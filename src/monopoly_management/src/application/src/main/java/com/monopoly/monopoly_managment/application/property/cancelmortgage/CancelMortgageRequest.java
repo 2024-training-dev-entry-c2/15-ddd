@@ -29,4 +29,16 @@ public class CancelMortgageRequest extends Request {
   public Double getAmount() {
     return amount;
   }
+
+  public void setOwnerId(String ownerId) {
+    this.ownerId = ownerId;
+  }
+
+  public void setPropertyId(String propertyId) {
+    this.propertyId = propertyId;
+  }
+
+  public void setAmount(Double amount) {
+    this.amount = amount;
+  }
 }

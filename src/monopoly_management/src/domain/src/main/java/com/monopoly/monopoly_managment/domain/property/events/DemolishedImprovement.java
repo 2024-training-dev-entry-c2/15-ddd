@@ -17,8 +17,8 @@ public class DemolishedImprovement extends DomainEvent {
     this.cost = cost;
   }
 
-  public DemolishedImprovement(String name) {
-    super(name);
+  public DemolishedImprovement() {
+    super(EventsEnum.DEMOLISHED_IMPROVEMENT.name() );
   }
 
   public String getImprovementId() {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/makemortgage")
+@RequestMapping("/api/makemortgage")
 public class MakeMortgage {
   private final MakeMortgageUseCase makeMortgageUseCase;
 

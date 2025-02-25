@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/assignowner")
+@RequestMapping("/api/assignowner")
 public class AssignOwner {
   private final AssignOwnerUseCase assignOwnerUseCase;
 

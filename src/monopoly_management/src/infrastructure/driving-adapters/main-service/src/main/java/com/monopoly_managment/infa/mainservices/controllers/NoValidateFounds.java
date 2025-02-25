@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/novalidatefounds")
+@RequestMapping("/api/novalidatefounds")
 public class NoValidateFounds {
   private final NoValidationFoundsUseCase noValidationFoundsUseCase;
 

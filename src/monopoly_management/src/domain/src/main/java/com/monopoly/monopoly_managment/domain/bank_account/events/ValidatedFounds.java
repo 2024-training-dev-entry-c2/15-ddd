@@ -15,8 +15,8 @@ public class ValidatedFounds extends DomainEvent {
     this.type = type;
   }
 
-  public ValidatedFounds(String name) {
-    super(name);
+  public ValidatedFounds() {
+    super(EventsEnum.VALIDATED_FOUNDS.name());
   }
 
   public String getTransactionId() {

@@ -36,4 +36,20 @@ public class MadeImprovementRequest extends Request {
   public Double getCost() {
     return cost;
   }
+
+  public void setImprovementId(String improvementId) {
+    this.improvementId = improvementId;
+  }
+
+  public void setPropertyId(String propertyId) {
+    this.propertyId = propertyId;
+  }
+
+  public void setType(TypeImprovementEnum type) {
+    this.type = type;
+  }
+
+  public void setCost(Double cost) {
+    this.cost = cost;
+  }
 }

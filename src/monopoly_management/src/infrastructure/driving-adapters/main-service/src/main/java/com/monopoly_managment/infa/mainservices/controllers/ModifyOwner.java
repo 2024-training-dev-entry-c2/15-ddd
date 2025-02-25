@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/modifyowner")
+@RequestMapping("/api/modifyowner")
 public class ModifyOwner {
   private final ModifyOwnerUseCase modifyOwnerUseCase;
 

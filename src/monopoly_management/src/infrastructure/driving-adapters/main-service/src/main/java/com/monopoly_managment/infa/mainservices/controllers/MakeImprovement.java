@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("api/makeimprovement")
+@RequestMapping("/api/makeimprovement")
 public class MakeImprovement {
   private final MadeImprovementUseCase madeImprovementUseCase;
 

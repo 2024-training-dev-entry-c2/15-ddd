@@ -21,8 +21,8 @@ public class RejectedTransaction extends DomainEvent {
     this.destiny = destiny;
   }
 
-  public RejectedTransaction(String name) {
-    super(name);
+  public RejectedTransaction() {
+    super(EventsEnum.REJECTED_TRANSACTION.name() );
   }
 
   public String getOwnerId() {

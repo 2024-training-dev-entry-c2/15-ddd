@@ -13,8 +13,8 @@ public class OwnerRemoved extends DomainEvent {
     this.propertyId = propertyId;
   }
 
-  public OwnerRemoved(String name) {
-    super(name);
+  public OwnerRemoved() {
+    super(EventsEnum.OWNER_REMOVED.name() );
   }
 
   public void setOwnerId(String ownerId) {

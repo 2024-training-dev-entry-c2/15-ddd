@@ -23,7 +23,7 @@ public class CreateTransactionUseCase implements ICommandUseCase<CreateTransacti
     return repository
       .findEventsByAggregateId(request.getAggregateId())
       .collectList()
-      .map(events ->{
+      .map(events -> {
         events.sort(Comparator.comparing(DomainEvent::getWhen));
         BankAccount bankAccount = BankAccount.from(request.getAggregateId(), request.getOrigin(), events);
         Transaction transaction = new Transaction(request.getAmount(), request.getType(), request.getOrigin(), request.getDestiny());

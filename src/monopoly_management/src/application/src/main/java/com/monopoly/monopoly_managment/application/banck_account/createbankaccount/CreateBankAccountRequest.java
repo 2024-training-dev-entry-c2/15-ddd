@@ -18,8 +18,8 @@ public class CreateBankAccountRequest extends Request {
     super(null);
   }
 
-  public String getOwnerId() {
-    return CreateBankAccountRequest.this.owner;
+  public String getOwner() {
+    return owner;
   }
 
 }
