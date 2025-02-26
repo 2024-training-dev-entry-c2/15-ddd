@@ -30,25 +30,29 @@ public class EndTurnUseCase implements ICommandUseCase<EndTurnRequest, Mono<EndT
   public Mono<EndTurnResponse> execute(EndTurnRequest request) {
     return eventsRepository.findEventsByAggregateId(request.getAggregateId())
             .collectList()
-            .map(events -> {
-              List<Rule> rules = Collections.emptyList();
-              List<Turn> turns = Collections.emptyList();
-              List<PlayerId> players = List.of(PlayerId.of("player-1"), PlayerId.of("player-2"));
+            .flatMap(events -> {
+              if (events.isEmpty()) {
+                return Mono.error(new RuntimeException("No se encontró el juego con ID: " + request.getAggregateId()));
+              }
 
-              Game game = Game.createGame(
-                      GameId.of(request.getAggregateId()),
-                      GameState.of(States.IN_PROGRESS),
-                      new Board(new Dimensions(10, 10), new Positions(0, 0), players),
-                      rules,
-                      turns,
-                      new NumberPlayers(2)
-              );
+              Game game = Game.rebuildGame(GameId.of(request.getAggregateId()), events);
 
-              boolean playerExists = players.stream()
-                      .anyMatch(player -> player.getValue().equals(request.getPlayerId()));
+              if (!game.getState().getState().equals(States.IN_PROGRESS)) {
+                return Mono.error(new RuntimeException("El juego no está en progreso."));
+              }
+
+              boolean playerExists = game.getPlayersIds() != null &&
+                      game.getPlayersIds().stream()
+                              .anyMatch(player -> player.getValue().equals(request.getPlayerId()));
 
               if (!playerExists) {
-                return new EndTurnResponse(game.getIdentity().getValue(), request.getPlayerId(), request.getTurnNumber(), request.getReason(), false);
+                return Mono.just(new EndTurnResponse(
+                        game.getIdentity().getValue(),
+                        request.getPlayerId(),
+                        request.getTurnNumber(),
+                        request.getReason(),
+                        false
+                ));
               }
 
               game.endTurn(PlayerId.of(request.getPlayerId()), request.getTurnNumber(), request.getReason());
@@ -56,13 +60,14 @@ public class EndTurnUseCase implements ICommandUseCase<EndTurnRequest, Mono<EndT
               game.getUncommittedEvents().forEach(eventsRepository::save);
               game.markEventsAsCommitted();
 
-              return new EndTurnResponse(
+              return Mono.just(new EndTurnResponse(
                       game.getIdentity().getValue(),
                       request.getPlayerId(),
                       request.getTurnNumber(),
                       request.getReason(),
                       true
-              );
+              ));
             });
   }
+
 }

@@ -7,12 +7,14 @@ import com.buildingclue.gameDynamics.domain.game.values.Dimensions;
 import com.buildingclue.gameDynamics.domain.game.values.GameId;
 import com.buildingclue.gameDynamics.domain.game.values.GameState;
 import com.buildingclue.gameDynamics.domain.game.values.NumberPlayers;
+import com.buildingclue.gameDynamics.domain.game.values.PlayerId;
 import com.buildingclue.gameDynamics.domain.game.values.Positions;
 import com.buildingclue.shared.application.ICommandUseCase;
 import com.buildingclue.shared.domain.constants.States;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
+import java.util.List;
 
 public class EndGameUseCase implements ICommandUseCase<EndGameRequest, Mono<EndGameResponse>> {
 
@@ -27,13 +29,15 @@ public class EndGameUseCase implements ICommandUseCase<EndGameRequest, Mono<EndG
     return eventsRepository.findEventsByAggregateId(request.getAggregateId())
             .collectList()
             .map(events -> {
+              List<PlayerId> playerIds = List.of(PlayerId.of("player-001"), PlayerId.of("player-002"));
               Game game = Game.createGame(
                       GameId.of(request.getAggregateId()),
                       GameState.of(States.IN_PROGRESS),
-                      new Board(new Dimensions(10, 10), new Positions(0, 0), Collections.emptyList()),
+                      new Board(new Dimensions(10, 10), new Positions(0, 0), playerIds),
                       Collections.emptyList(),
                       Collections.emptyList(),
-                      new NumberPlayers(2)
+                      new NumberPlayers(2),
+                      playerIds
               );
 
               game.endGame(request.getWinnerPlayerId(), request.getWasCaseSolved());

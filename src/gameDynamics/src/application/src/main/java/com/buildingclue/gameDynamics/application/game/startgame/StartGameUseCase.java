@@ -30,11 +30,11 @@ public class StartGameUseCase implements ICommandUseCase<StartGameRequest, Mono<
   public Mono<StartGameResponse> execute(StartGameRequest request) {
     Dimensions dimensions = new Dimensions(10, 10);
     Positions startPosition = new Positions(0, 0);
-    List<PlayerId> players = Collections.emptyList();
+    List<PlayerId> playerIds = List.of(PlayerId.of("player-001"), PlayerId.of("player-002"));
     List<Rule> rules = Collections.emptyList();
     List<Turn> turns = Collections.emptyList();
 
-    Board board = new Board(dimensions, startPosition, players);
+    Board board = new Board(dimensions, startPosition, playerIds);
 
     Game game = Game.createGame(
             GameId.of(request.getAggregateId()),
@@ -42,7 +42,8 @@ public class StartGameUseCase implements ICommandUseCase<StartGameRequest, Mono<
             board,
             rules,
             turns,
-            new NumberPlayers(2)
+            new NumberPlayers(2),
+            playerIds
     );
 
     game.startGame();
@@ -51,7 +52,7 @@ public class StartGameUseCase implements ICommandUseCase<StartGameRequest, Mono<
 
     return Mono.just(new StartGameResponse(
             game.getIdentity().getValue(),
-            players.isEmpty() ? "No Players" : players.get(0).getValue(),
+            playerIds.isEmpty() ? "No Players" : playerIds.get(0).getValue(),
             game.getState().getState().toString()
     ));
   }

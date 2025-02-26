@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/start-game")
+@RequestMapping("/api/game")
 public class StartGameController {
   private final StartGameUseCase startGameUseCase;
 
@@ -18,7 +18,7 @@ public class StartGameController {
     this.startGameUseCase = startGameUseCase;
   }
 
-  @PostMapping
+  @PostMapping("/start-game")
   public Mono<StartGameResponse> execute(@RequestBody StartGameRequest request) {
     return startGameUseCase.execute(request);
   }
