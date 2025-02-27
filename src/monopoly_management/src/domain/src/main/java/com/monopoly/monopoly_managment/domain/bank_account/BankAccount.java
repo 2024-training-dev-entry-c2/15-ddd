@@ -106,6 +106,7 @@ public class BankAccount extends AggregateRoot<BankAccountId> {
     bankAccount.setOwnerId(ownerId);
     bankAccount.setTransactions(new ArrayList<>());
     domainEvents.forEach(bankAccount::apply);
+    bankAccount.markEventsAsCommitted();
     return bankAccount;
   }
   }

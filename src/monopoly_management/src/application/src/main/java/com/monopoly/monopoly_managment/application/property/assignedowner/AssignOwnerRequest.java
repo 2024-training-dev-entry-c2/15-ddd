@@ -4,12 +4,12 @@ import com.monopoly.shared.application.Request;
 
 public class AssignOwnerRequest extends Request {
   private String ownerId;
-  private String propertyId;
 
-  public AssignOwnerRequest(String aggregateId, String ownerId, String propertyId) {
+
+  public AssignOwnerRequest(String aggregateId, String ownerId) {
     super(aggregateId);
     this.ownerId = ownerId;
-    this.propertyId = propertyId;
+
   }
 
   public AssignOwnerRequest(){
@@ -20,15 +20,9 @@ public class AssignOwnerRequest extends Request {
     return ownerId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
 
   public void setOwnerId(String ownerId) {
     this.ownerId = ownerId;
   }
 
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
-  }
 }

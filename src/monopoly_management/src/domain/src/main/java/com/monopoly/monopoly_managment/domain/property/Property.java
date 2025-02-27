@@ -17,6 +17,7 @@ import com.monopoly.monopoly_managment.domain.property.values.*;
 import com.monopoly.shared.domain.generic.AggregateRoot;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Property extends AggregateRoot<PropertyId> {
@@ -28,32 +29,32 @@ public class Property extends AggregateRoot<PropertyId> {
   private Name name;
   private Price price;
   private ColorGroup colorGroup;
+  private Integer improvementsLevel = 1;
+  private Boolean isMortgaged;
 
   // region Constructors
   private Property(PropertyId identity) {
     super(identity);
-    this.improvements = new UpgradeId();
-    this.contract = new ContractId();
-    this.mortgage = new MortgageId();
-    this.owner = new OwnerId();
-    this.name = Name.of("name");
-    this.price = Price.of(0.0);
-    this.colorGroup = ColorGroup.of("BROWN");
     subscribe(new PropertyHandler(this));
   }
 
   public Property() {
     super(new PropertyId());
-    this.improvements = new UpgradeId();
     subscribe(new PropertyHandler(this));
   }
-
-
   // endregion
 
   // region Getters and Setters
   public BankAccountId getBankAccountId() {
     return bankAccountId;
+  }
+
+  public Integer getImprovementsLevel() {
+    return improvementsLevel;
+  }
+
+  public void setImprovementsLevel(Integer improvementsLevel) {
+    this.improvementsLevel = improvementsLevel;
   }
 
   public void setBankAccountId(BankAccountId bankAccountId) {
@@ -80,8 +81,9 @@ public class Property extends AggregateRoot<PropertyId> {
     return mortgage;
   }
 
-  public void setMortgage(MortgageId mortgage) {
+  public void setMortgage(MortgageId mortgage, Boolean status) {
     this.mortgage = mortgage;
+    this.isMortgaged = status;
   }
 
   public OwnerId getOwner() {
@@ -126,34 +128,34 @@ public class Property extends AggregateRoot<PropertyId> {
     apply(new MadeImprovement(improvementId, propertyId, type, cost));
   }
 
-  public void demolishedImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
-    apply(new DemolishedImprovement(improvementId, propertyId, type, cost));
+  public void demolishedImprovement(String improvementId,TypeImprovementEnum type, Double cost) {
+    apply(new DemolishedImprovement(improvementId, type, cost));
   }
 
-  public void mortgaged(String ownerId, String propertyId , Double amount) {
-    apply(new MortgageConstituted(ownerId, propertyId, amount));
+  public void mortgaged(String mortgageId ,String ownerId, Double amount, Boolean mortgaged) {
+    apply(new MortgageConstituted(mortgageId,ownerId, amount, true));
   }
 
-  public void canceledMortgage(String ownerId, String propertyId, Double amount) {
-    apply(new MortgageCanceled(ownerId, propertyId, amount));
+  public void canceledMortgage(String ownerId,Double amount) {
+    apply(new MortgageCanceled(ownerId, amount));
   }
 
-  public void assignedOwner(String ownerId, String propertyId) {
-    apply(new OwnerAssigned(ownerId, propertyId));
+  public void assignedOwner(String ownerId) {
+    apply(new OwnerAssigned(ownerId));
   }
 
   public void removedOwner(String ownerId, String propertyId) {
     apply(new OwnerRemoved(ownerId, propertyId));
   }
 
-  public void modifiedOwner(String ownerId, String propertyId, String previousOwnerId) {
-    apply(new OwnerModified(ownerId, propertyId, previousOwnerId));
+  public void modifiedOwner(String ownerId, String previousOwnerId) {
+    apply(new OwnerModified(ownerId, previousOwnerId));
   }
   // endregion
 
   // region Public Methods
   public Integer getDevelopmentLevel() {
-    Upgrade upgrade = getUpgradeById(this.improvements.getValue());
+    Upgrade upgrade = new Upgrade(UpgradeId.of(this.getImprovements().getValue()), TypeImprovement.of(TypeImprovementEnum.HOUSE), DevelopmentLevel.of(this.improvementsLevel), Cost.of(0.0, CostEnum.BASE), PropertyId.of(this.getIdentity().getValue()));
     return upgrade.getDevelopmentLevel().getValue();
   }
 
@@ -161,14 +163,14 @@ public class Property extends AggregateRoot<PropertyId> {
     return new Upgrade(
       UpgradeId.of(improvementId),
       TypeImprovement.of(TypeImprovementEnum.HOUSE),
-      DevelopmentLevel.of(3),
-      Cost.of(100.0, CostEnum.BASE),
-      PropertyId.of("propertyId")
+      DevelopmentLevel.of(getDevelopmentLevel()),
+      Cost.of(getPrice().getValue(), CostEnum.BASE),
+      PropertyId.of(getIdentity().getValue())
     );
   }
 
   public Double getBalance() {
-    return 4.0;
+    return getOwnerById(this.owner.getValue()).getWealth().getBalance();
   }
 
   public void addBalance(Double balance){
@@ -184,12 +186,14 @@ public class Property extends AggregateRoot<PropertyId> {
   }
 
   public Mortgage getIsMortgaged(){
-    return new Mortgage(MortgageId.of("mortgage-123"), Value.of(1000.0), IsMortgaged.of(false), CancellationCost.of(500.0));
+    setMortgage( new Mortgage(MortgageId.of("mortgageId"), Value.of(1000.0), IsMortgaged.of(true), CancellationCost.of(500.0)).getIdentity(), this.isMortgaged);
+    return new Mortgage(MortgageId.of("mortgageId"), Value.of(1000.0), IsMortgaged.of(false), CancellationCost.of(500.0));
   }
 
   public void setDevelopmentLevel(DevelopmentLevel developmentLevel) {
-    Mortgage mortgage = new Mortgage(MortgageId.of("mortgage-123"), Value.of(1000.0), IsMortgaged.of(false), CancellationCost.of(500.0));
-    setMortgage(mortgage.getIdentity());
+    Upgrade upgrade = new Upgrade(UpgradeId.of(this.improvements.getValue()), TypeImprovement.of(TypeImprovementEnum.HOUSE), developmentLevel, Cost.of(this.price.getValue(), CostEnum.BASE), PropertyId.of(this.getIdentity().getValue()));
+    this.improvementsLevel = upgrade.getDevelopmentLevel().getValue();
+    this.improvements = upgrade.getIdentity();
   }
 
   public void validateMaximumDevelopmentLevel() {
@@ -205,33 +209,31 @@ public class Property extends AggregateRoot<PropertyId> {
   }
 
   public Owner getOwnerById(final String ownerId) {
-   Owner owner = new Owner(Alias.of("alias"), Token.of("example"), Portfolio.of(List.of("1")), Wealth.of(0.0, List.of()));
+   Owner owner = new Owner(OwnerId.of(ownerId), Alias.of("Sergio"), Token.of("Auto"), Portfolio.of(new ArrayList<>()), Wealth.of(0.0, new ArrayList<>()));
   this.owner = owner.getIdentity();
     return owner;
   }
 
-  public OwnerId getOwnerIdById(final String ownerId) {
-    return this.owner;
-  }
-
   public void buildImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
-    Upgrade upgrade = new Upgrade(UpgradeId.of(improvementId), TypeImprovement.of(type), DevelopmentLevel.of(3), Cost.of(cost, CostEnum.BASE), PropertyId.of(propertyId));
+    Upgrade upgrade = new Upgrade(UpgradeId.of(improvementId), TypeImprovement.of(type), DevelopmentLevel.of(this.getDevelopmentLevel()+1), Cost.of(cost, CostEnum.BASE), PropertyId.of(propertyId));
     setImprovements(upgrade.getIdentity());
+    this.improvementsLevel = upgrade.getDevelopmentLevel().getValue();
   }
 
-  public void downgradeImprovement(String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
-    Upgrade upgrade = new Upgrade(UpgradeId.of(improvementId), TypeImprovement.of(type), DevelopmentLevel.of(3), Cost.of(cost, CostEnum.BASE), PropertyId.of(propertyId));
+  public void downgradeImprovement(String improvementId,TypeImprovementEnum type, Double cost) {
+    Upgrade upgrade = new Upgrade(UpgradeId.of(improvementId), TypeImprovement.of(type), DevelopmentLevel.of(this.getDevelopmentLevel()-1), Cost.of(cost, CostEnum.BASE), PropertyId.of(this.getIdentity().getValue()));
     setImprovements(upgrade.getIdentity());
+    this.improvementsLevel = upgrade.getDevelopmentLevel().getValue();
   }
 
   public Mortgage getMortgageById(String mortgageId, Boolean status) {
-    Mortgage mortgage = new Mortgage(MortgageId.of(mortgageId), Value.of(0.0), IsMortgaged.of(status), CancellationCost.of(0.0));
+    Mortgage mortgage = new Mortgage(MortgageId.of(mortgageId), Value.of(500.0), IsMortgaged.of(status), CancellationCost.of(700.0));
     this.mortgage = mortgage.getIdentity();
     return mortgage;
   }
 
   public Contract getContractById(String contractId) {
-    Contract contract = new Contract(ContractId.of(contractId), TypeContrat.of(TypeContratEnum.RENT), Rate.of(0.0, 0.0), Parties.of("ownerId"), IsActive.of(true));
+    Contract contract = new Contract(ContractId.of(contractId), TypeContrat.of(TypeContratEnum.RENT), Rate.of(30.0, 50.0), Parties.of(getOwnerById(this.owner.getValue()).getIdentity().getValue()), IsActive.of(true));
     this.contract = contract.getIdentity();
     return contract;
   }
@@ -240,6 +242,7 @@ public class Property extends AggregateRoot<PropertyId> {
   public static Property from(final String identity,final List<DomainEvent> domainEvents) {
     Property property = new Property(PropertyId.of(identity));
     domainEvents.forEach(property::apply);
+    property.markEventsAsCommitted();
     return property;
   }
 }

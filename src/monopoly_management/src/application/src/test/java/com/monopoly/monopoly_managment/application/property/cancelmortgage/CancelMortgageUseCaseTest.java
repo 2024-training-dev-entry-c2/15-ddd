@@ -23,7 +23,7 @@ class CancelMortgageUseCaseTest {
   void execute() {
     Mockito.when(repository.findEventsByAggregateId(Mockito.anyString())).thenReturn(Flux.just(
       new CreatedProperty("contractId", "mortgageId", "ownerId","updateId" ,"name", 0.0, "BROWN"),
-      new MortgageConstituted("mortgageId", "name", 0.0)
+      new MortgageConstituted("mortgageId","ownerId" ,0.0, true )
     ));
 
     CancelMortgageRequest request = new CancelMortgageRequest("aggregateId", "mortgageId", "ownerId", 0.0);

@@ -25,7 +25,7 @@ public class DemolishImprovementUseCase implements ICommandUseCase<DemolishImpro
       .map(events ->{
         events.sort(Comparator.comparing(DomainEvent::getWhen));
         Property property = Property.from(request.getAggregateId(), events);
-        property.demolishedImprovement(request.getImprovementId(), request.getPropertyId(), request.getType(), request.getCost());
+        property.demolishedImprovement(request.getImprovementId(), request.getType(), request.getCost());
         property.getUncommittedEvents().forEach(repository::save);
         property.markEventsAsCommitted();
         return PropertyMapper.toPropertyResponse(property);

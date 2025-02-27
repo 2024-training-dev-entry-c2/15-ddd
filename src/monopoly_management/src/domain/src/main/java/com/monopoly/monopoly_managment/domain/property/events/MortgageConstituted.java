@@ -3,15 +3,33 @@ package com.monopoly.monopoly_managment.domain.property.events;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class MortgageConstituted extends DomainEvent {
+  private String mortgageId;
   private String ownerId;
-  private String propertyId;
   private Double amount;
+  private Boolean mortgaged;
 
-  public MortgageConstituted(String ownerId, String propertyId, Double amount) {
+  public MortgageConstituted(String mortgageId ,String ownerId,Double amount, Boolean mortgaged) {
     super(EventsEnum.MORTGAGE_CONSTITUTED.name() );
+    this.mortgageId = mortgageId;
     this.ownerId = ownerId;
-    this.propertyId = propertyId;
     this.amount = amount;
+    this.mortgaged = mortgaged;
+  }
+
+  public Boolean getMortgaged() {
+    return mortgaged;
+  }
+
+  public void setMortgaged(Boolean mortgaged) {
+    this.mortgaged = mortgaged;
+  }
+
+  public String getMortgageId() {
+    return mortgageId;
+  }
+
+  public void setMortgageId(String mortgageId) {
+    this.mortgageId = mortgageId;
   }
 
   public MortgageConstituted() {
@@ -22,10 +40,6 @@ public class MortgageConstituted extends DomainEvent {
     this.ownerId = ownerId;
   }
 
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
-  }
-
   public void setAmount(Double amount) {
     this.amount = amount;
   }
@@ -34,9 +48,6 @@ public class MortgageConstituted extends DomainEvent {
     return ownerId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
 
   public Double getAmount() {
     return amount;

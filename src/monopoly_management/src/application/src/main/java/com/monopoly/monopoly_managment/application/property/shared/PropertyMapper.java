@@ -3,18 +3,18 @@ package com.monopoly.monopoly_managment.application.property.shared;
 import com.monopoly.monopoly_managment.domain.property.Property;
 import com.monopoly.monopoly_managment.domain.property.entities.Contract;
 import com.monopoly.monopoly_managment.domain.property.entities.Mortgage;
-import com.monopoly.monopoly_managment.domain.property.entities.Owner;
 import com.monopoly.monopoly_managment.domain.property.entities.Upgrade;
 
 public class PropertyMapper {
   public static PropertyResponse toPropertyResponse(Property property) {
     return new PropertyResponse(
       property.getIdentity().getValue(),
-      toUpgradeResponse(property.getUpgradeById(property.getImprovements().getValue())
-      ),
+      toUpgradeResponse(property.getUpgradeById(property.getImprovements().getValue())),
       toContractResponse(property.getContractById(property.getContract().getValue())),
       toMortgageResponse(property.getMortgageById(property.getMortgage().getValue(),false)),
-      toOwnerResponse(property.getOwnerById(property.getOwner().getValue())), property.getName().getValue(), property.getPrice().getValue(), property.getColorGroup().getValue()
+      property.getName().getValue(),
+      property.getPrice().getValue(),
+      property.getColorGroup().getValue()
     );
   }
 
@@ -47,12 +47,4 @@ public class PropertyMapper {
     );
   }
 
-  private static PropertyResponse.Owner toOwnerResponse(Owner owner) {
-    return new PropertyResponse.Owner(
-      owner.getAlias().getValue(),
-      owner.getToken().getValue(),
-      owner.getPortfolio().getPropertiesIds(),
-      owner.getWealth().getBalance()
-    );
-  }
 }

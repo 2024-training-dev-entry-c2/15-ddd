@@ -23,7 +23,7 @@ class RemoveOwnerUseCaseTest {
   void execute() {
     Mockito.when(repository.findEventsByAggregateId(Mockito.anyString())).thenReturn(Flux.just(
       new CreatedProperty("contractId", "mortgageId", "ownerId","updateId" ,"name", 0.0, "BROWN"),
-      new OwnerAssigned("ownerId", "propertyId")
+      new OwnerAssigned("ownerId")
     ));
 
     RemoveOwnerRequest request = new RemoveOwnerRequest("propertyId", "ownerId");

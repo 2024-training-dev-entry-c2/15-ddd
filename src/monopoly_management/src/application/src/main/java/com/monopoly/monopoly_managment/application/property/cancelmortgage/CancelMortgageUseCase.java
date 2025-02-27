@@ -25,7 +25,7 @@ public class CancelMortgageUseCase implements ICommandUseCase<CancelMortgageRequ
       .map(events ->{
         events.sort(Comparator.comparing(DomainEvent::getWhen));
         Property property = Property.from(request.getAggregateId(), events);
-        property.canceledMortgage(request.getOwnerId(), request.getPropertyId(), request.getAmount());
+        property.canceledMortgage(request.getOwnerId(), request.getAmount());
         property.getUncommittedEvents().forEach(repository::save);
         property.markEventsAsCommitted();
         return PropertyMapper.toPropertyResponse(property);

@@ -5,13 +5,12 @@ import com.monopoly.shared.application.Request;
 public class ModifyOwnerRequest extends Request {
   private String previousOwnerId;
   private String ownerId;
-  private String propertyId;
 
-  public ModifyOwnerRequest(String aggregateId, String previousOwnerId, String ownerId, String propertyId) {
+
+  public ModifyOwnerRequest(String aggregateId, String previousOwnerId, String ownerId) {
     super(aggregateId);
     this.previousOwnerId = previousOwnerId;
     this.ownerId = ownerId;
-    this.propertyId = propertyId;
   }
 
   public ModifyOwnerRequest() {
@@ -26,13 +25,6 @@ public class ModifyOwnerRequest extends Request {
     this.ownerId = ownerId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
-
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
-  }
 
   public String getPreviousOwnerId() {
     return previousOwnerId;

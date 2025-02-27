@@ -25,7 +25,7 @@ public class MakeMortgageUseCase implements ICommandUseCase<MakeMortgageRequest,
       .map(events ->{
         events.sort(Comparator.comparing(DomainEvent::getWhen));
         Property property = Property.from(request.getAggregateId(), events);
-        property.mortgaged(request.getOwnerId(), request.getPropertyId(), request.getAmount());
+        property.mortgaged(request.getMortgageId() ,request.getOwnerId(), request.getAmount(), true);
         property.getUncommittedEvents().forEach(repository::save);
         property.markEventsAsCommitted();
         return PropertyMapper.toPropertyResponse(property);

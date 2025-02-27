@@ -23,10 +23,10 @@ class ModifyOwnerUseCaseTest {
   void execute() {
     Mockito.when(repository.findEventsByAggregateId(Mockito.anyString())).thenReturn(Flux.just(
       new CreatedProperty("contractId", "mortgageId", "ownerId","updateId" ,"name", 0.0, "BROWN"),
-      new OwnerAssigned("ownerId", "propertyId")
+      new OwnerAssigned("ownerId")
     ));
 
-    ModifyOwnerRequest request = new ModifyOwnerRequest("aggregateId", "previousOwnerId","ownerId", "propertyId");
+    ModifyOwnerRequest request = new ModifyOwnerRequest("aggregateId", "previousOwnerId","ownerId");
 
     StepVerifier.create(useCase.execute(request))
       .assertNext(response -> {

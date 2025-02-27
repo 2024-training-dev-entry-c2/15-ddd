@@ -25,7 +25,7 @@ private final IEventsRepositoryPort repository;
       .map(events ->{
         events.sort(Comparator.comparing(DomainEvent::getWhen));
         Property property = Property.from(request.getAggregateId(), events);
-        property.assignedOwner(request.getOwnerId(),request.getPropertyId() );
+        property.assignedOwner(request.getOwnerId());
         property.getUncommittedEvents().forEach(repository::save);
         property.markEventsAsCommitted();
         return PropertyMapper.toPropertyResponse(property);

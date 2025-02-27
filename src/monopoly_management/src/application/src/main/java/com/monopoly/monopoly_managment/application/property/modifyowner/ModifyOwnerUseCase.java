@@ -25,7 +25,7 @@ public class ModifyOwnerUseCase implements ICommandUseCase<ModifyOwnerRequest, M
       .map(events ->{
         events.sort(Comparator.comparing(DomainEvent::getWhen));
         Property property = Property.from(request.getAggregateId(), events);
-        property.modifiedOwner(request.getOwnerId(), request.getPropertyId(), request.getPreviousOwnerId());
+        property.modifiedOwner(request.getOwnerId(), request.getPreviousOwnerId());
         property.getUncommittedEvents().forEach(repository::save);
         property.markEventsAsCommitted();
         return PropertyMapper.toPropertyResponse(property);

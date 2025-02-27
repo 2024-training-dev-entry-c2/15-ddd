@@ -10,17 +10,16 @@ public class PropertyResponse {
   private final Upgrade upgrade;
   private final Contract contract;
   private final Mortgage mortgage;
-  private final Owner owner;
   private final String name;
   private final Double price;
   private final String colorGroup;
 
-  public PropertyResponse(String propertyID, Upgrade upgrade, Contract contract, Mortgage mortgage, Owner owner, String name, Double price, String colorGroup) {
+  public PropertyResponse(String propertyID, Upgrade upgrade, Contract contract, Mortgage mortgage, String name, Double price, String colorGroup) {
     this.propertyID = propertyID;
     this.upgrade = upgrade;
     this.contract = contract;
     this.mortgage = mortgage;
-    this.owner = owner;
+
     this.name = name;
     this.price = price;
     this.colorGroup = colorGroup;
@@ -40,10 +39,6 @@ public class PropertyResponse {
 
   public Mortgage getMortgage() {
     return mortgage;
-  }
-
-  public Owner getOwner() {
-    return owner;
   }
 
   public String getName() {
@@ -133,12 +128,12 @@ public class PropertyResponse {
 
   public static class Mortgage{
     private final Double value;
-    private final Boolean isMortgaged;
+
     private final Double cancellationCost;
 
     public Mortgage(Double value, Boolean isMortgaged, Double cancellationCost) {
       this.value = value;
-      this.isMortgaged = isMortgaged;
+
       this.cancellationCost = cancellationCost;
     }
 
@@ -146,9 +141,6 @@ public class PropertyResponse {
       return value;
     }
 
-    public Boolean getMortgaged() {
-      return isMortgaged;
-    }
 
     public Double getCancellationCost() {
       return cancellationCost;

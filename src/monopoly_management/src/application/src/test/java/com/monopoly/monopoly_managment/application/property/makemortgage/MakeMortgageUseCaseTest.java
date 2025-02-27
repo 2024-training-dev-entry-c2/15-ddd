@@ -24,7 +24,7 @@ class MakeMortgageUseCaseTest {
       new CreatedProperty("contractId", "mortgageId", "ownerId","updateId" ,"name", 0.0, "BROWN")
     ));
 
-    MakeMortgageRequest request = new MakeMortgageRequest("aggregateId", "mortgageId", "ownerId", 0.0);
+    MakeMortgageRequest request = new MakeMortgageRequest("makeMortgageId","aggregateId", "mortgageId", "ownerId", 0.0);
 
     StepVerifier.create(makeMortgageUseCase.execute(request))
       .assertNext(response -> {

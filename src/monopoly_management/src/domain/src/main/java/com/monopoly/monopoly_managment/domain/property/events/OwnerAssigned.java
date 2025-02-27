@@ -4,12 +4,11 @@ import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class OwnerAssigned extends DomainEvent {
   private String ownerId;
-  private String propertyId;
 
-  public OwnerAssigned(String ownerId, String propertyId) {
+  public OwnerAssigned(String ownerId) {
     super(EventsEnum.OWNER_ASSIGNED.name() );
     this.ownerId = ownerId;
-    this.propertyId = propertyId;
+
   }
 
   public OwnerAssigned() {
@@ -20,15 +19,9 @@ public class OwnerAssigned extends DomainEvent {
     this.ownerId = ownerId;
   }
 
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
-  }
 
   public String getOwnerId() {
     return ownerId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
 }

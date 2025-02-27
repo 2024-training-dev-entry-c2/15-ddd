@@ -5,14 +5,12 @@ import com.monopoly.shared.application.Request;
 
 public class DemolishImprovementRequest extends Request {
   private String improvementId;
-  private String propertyId;
   private TypeImprovementEnum type;
   private Double cost;
 
-  public DemolishImprovementRequest(String aggregateId, String improvementId, String propertyId, TypeImprovementEnum type, Double cost) {
+  public DemolishImprovementRequest(String aggregateId, String improvementId, TypeImprovementEnum type, Double cost) {
     super(aggregateId);
     this.improvementId = improvementId;
-    this.propertyId = propertyId;
     this.type = type;
     this.cost = cost;
   }
@@ -25,9 +23,6 @@ public class DemolishImprovementRequest extends Request {
     return improvementId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
 
   public TypeImprovementEnum getType() {
     return type;
@@ -39,10 +34,6 @@ public class DemolishImprovementRequest extends Request {
 
   public void setImprovementId(String improvementId) {
     this.improvementId = improvementId;
-  }
-
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
   }
 
   public void setType(TypeImprovementEnum type) {

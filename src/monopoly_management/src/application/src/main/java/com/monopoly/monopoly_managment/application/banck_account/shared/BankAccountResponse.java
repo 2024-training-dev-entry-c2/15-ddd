@@ -17,6 +17,18 @@ public class BankAccountResponse {
     this.balance = balance;
   }
 
+  public String getOwnerID() {
+    return ownerID;
+  }
+
+  public List<Transaction> getTransactions() {
+    return transactions;
+  }
+
+  public Double getBalance() {
+    return balance;
+  }
+
   public String getBankAccountID() {
     return bankAccountID;
   }

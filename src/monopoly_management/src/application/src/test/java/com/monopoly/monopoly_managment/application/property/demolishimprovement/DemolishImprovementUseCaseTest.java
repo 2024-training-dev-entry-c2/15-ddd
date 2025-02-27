@@ -27,7 +27,7 @@ class DemolishImprovementUseCaseTest {
       new MadeImprovement("improvementId", "name", TypeImprovementEnum.HOUSE, 0.0)
     ));
 
-    DemolishImprovementRequest request = new DemolishImprovementRequest("aggregateId", "improvementId", "propertyId", TypeImprovementEnum.HOUSE, 0.0);
+    DemolishImprovementRequest request = new DemolishImprovementRequest("aggregateId", "improvementId", TypeImprovementEnum.HOUSE, 0.0);
 
     StepVerifier.create(useCase.execute(request))
       .assertNext(response -> {

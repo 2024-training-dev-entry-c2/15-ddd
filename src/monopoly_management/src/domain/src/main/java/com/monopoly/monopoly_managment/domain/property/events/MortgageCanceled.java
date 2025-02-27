@@ -4,13 +4,11 @@ import com.monopoly.shared.domain.generic.DomainEvent;
 
 public class MortgageCanceled extends DomainEvent {
   private String ownerId;
-  private String propertyId;
   private Double amount;
 
-  public MortgageCanceled(String ownerId, String propertyId, Double amount) {
+  public MortgageCanceled(String ownerId, Double amount) {
     super(EventsEnum.MORTGAGE_CANCELLED.name() );
     this.ownerId = ownerId;
-    this.propertyId = propertyId;
     this.amount = amount;
   }
 
@@ -22,10 +20,6 @@ public class MortgageCanceled extends DomainEvent {
     this.ownerId = ownerId;
   }
 
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
-  }
-
   public void setAmount(Double amount) {
     this.amount = amount;
   }
@@ -34,9 +28,6 @@ public class MortgageCanceled extends DomainEvent {
     return ownerId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
 
   public Double getAmount() {
     return amount;

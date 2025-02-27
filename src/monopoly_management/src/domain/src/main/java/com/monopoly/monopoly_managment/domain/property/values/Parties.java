@@ -35,6 +35,6 @@ public class Parties implements IValueObject {
 
   @Override
   public void validate(){
-    Validator.validateNull(this.ownerId, "Owner id");
+
   }
 }

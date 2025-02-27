@@ -8,6 +8,7 @@ import com.monopoly.monopoly_managment.domain.bank_account.events.RejectedTransa
 import com.monopoly.monopoly_managment.domain.bank_account.events.ValidatedFounds;
 import com.monopoly.monopoly_managment.domain.bank_account.values.Balance;
 import com.monopoly.monopoly_managment.domain.bank_account.values.TransactionId;
+import com.monopoly.monopoly_managment.domain.bank_account.values.TypeEnum;
 import com.monopoly.shared.domain.generic.DomainActionsContainer;
 import com.monopoly.shared.domain.generic.DomainEvent;
 
@@ -62,6 +63,12 @@ public class BankAccountHandler extends DomainActionsContainer {
         .filter(t -> TransactionId.of(t.getIdentity().getValue()).equals(transactionId))
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException(event.getTransactionId() + " not found"));
+
+      if (transaction.getType() == TypeEnum.DEPOSIT) {
+        bankAccount.plusBalance(transaction.getAmount());
+      } else {
+        bankAccount.minusBalance(transaction.getAmount());
+      }
 
       bankAccount.getTransactions().remove(transaction);
       switch (event.getType()) {

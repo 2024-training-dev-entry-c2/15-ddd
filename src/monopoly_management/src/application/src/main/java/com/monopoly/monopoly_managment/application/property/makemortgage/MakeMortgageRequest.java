@@ -3,15 +3,33 @@ package com.monopoly.monopoly_managment.application.property.makemortgage;
 import com.monopoly.shared.application.Request;
 
 public class MakeMortgageRequest extends Request {
+  private String mortgageId;
   private String ownerId;
-  private String propertyId;
   private Double amount;
+  private Boolean mortgaged;
 
-  public MakeMortgageRequest(String aggregateId,String ownerId, String propertyId, Double amount) {
+  public MakeMortgageRequest(String mortgageId ,String aggregateId,String ownerId, Double amount) {
     super(aggregateId);
+    this.mortgageId = mortgageId;
     this.ownerId = ownerId;
-    this.propertyId = propertyId;
     this.amount = amount;
+    this.mortgaged = true;
+  }
+
+  public String getMortgageId() {
+    return mortgageId;
+  }
+
+  public Boolean getMortgaged() {
+    return mortgaged;
+  }
+
+  public void setMortgaged(Boolean mortgaged) {
+    mortgaged = mortgaged;
+  }
+
+  public void setMortgageId(String mortgageId) {
+    this.mortgageId = mortgageId;
   }
 
   public MakeMortgageRequest() {
@@ -22,9 +40,6 @@ public class MakeMortgageRequest extends Request {
     return ownerId;
   }
 
-  public String getPropertyId() {
-    return propertyId;
-  }
 
   public Double getAmount() {
     return amount;
@@ -32,10 +47,6 @@ public class MakeMortgageRequest extends Request {
 
   public void setOwnerId(String ownerId) {
     this.ownerId = ownerId;
-  }
-
-  public void setPropertyId(String propertyId) {
-    this.propertyId = propertyId;
   }
 
   public void setAmount(Double amount) {
