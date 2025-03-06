@@ -1,0 +1,28 @@
+dependencies {
+    // Plataforma de gestión de dependencias para JUnit
+    testImplementation platform('org.junit:junit-bom:5.11.0') // Última versión disponible
+
+    // Dependencias de JUnit para pruebas
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Mockito para la creación de mocks en pruebas
+    testImplementation 'org.mockito:mockito-core:5.15.2' // Última versión disponible
+
+    // Byte Buddy para la generación de bytecode en tiempo de ejecución
+    testImplementation 'net.bytebuddy:byte-buddy:1.15.11' // Última versión disponible
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.15.11'
+
+    // Reactor Core para programación reactiva
+    implementation 'io.projectreactor:reactor-core:3.7.3' // Última versión disponible
+    testImplementation 'io.projectreactor:reactor-test:3.7.3' // Versión de prueba correspondiente
+
+    // Dependencias de proyectos locales
+    implementation project(':shared:application')
+    implementation project(':monopoly_management:domain')
+    implementation project(':shared:domain')
+}
+
+test {
+    useJUnitPlatform()
+    // Activar soporte experimental de Byte Buddy para compatibilidad con Java 23
+}

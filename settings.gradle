@@ -1,0 +1,17 @@
+rootProject.name = 'monopoly'
+
+include ':shared:domain'
+include ':shared:application'
+include ':monopoly_management:application'
+include ':monopoly_management:domain'
+include ':monopoly_management:mongo'
+include ':monopoly_management:main-service'
+
+project (':shared:domain').projectDir=file('./src/shared/src/domain')
+project (':shared:application').projectDir=file('./src/shared/src/application')
+project (':monopoly_management:domain').projectDir=file('./src/monopoly_management/src/domain')
+project (':monopoly_management:application').projectDir=file('./src/monopoly_management/src/application')
+project (':monopoly_management:mongo').projectDir=file('./src/monopoly_management/src/infrastructure/driven-adapters/mongo')
+project (':monopoly_management:main-service').projectDir=file('./src/monopoly_management/src/infrastructure/driving-adapters/main-service')
+
+//com.monopoly.monopoly_managment.infa.mainservices.MainApplication

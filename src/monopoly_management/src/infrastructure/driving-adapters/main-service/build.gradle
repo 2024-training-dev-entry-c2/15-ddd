@@ -1,0 +1,7 @@
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+    implementation(project(':monopoly_management:mongo'))
+    implementation(project(':monopoly_management:application'))
+    implementation(project(':shared:application'))
+}
