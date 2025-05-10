@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/scoreboards" />
+            <option value="$PROJECT_DIR$/shared" />
+            <option value="$PROJECT_DIR$/src/scoreboards/src/application" />
+            <option value="$PROJECT_DIR$/src/scoreboards/src/domain" />
+            <option value="$PROJECT_DIR$/src/scoreboards/src/infrastructure/driven-adapters/mongo" />
+            <option value="$PROJECT_DIR$/src/scoreboards/src/infrastructure/driving-adapters/main-service" />
+            <option value="$PROJECT_DIR$/src/shared/src/application" />
+            <option value="$PROJECT_DIR$/src/shared/src/domain" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
