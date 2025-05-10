@@ -1,0 +1,17 @@
+rootProject.name = 'building-blocks'
+
+include ':shared:domain'
+include ':actions-and-shifts-manager:domain'
+include ':shared:application'
+include ':actions-and-shifts-manager:application'
+include ':actions-and-shifts-manager:mongo'
+include ':actions-and-shifts-manager:main-service'
+
+project(':shared:domain').projectDir = file('./src/shared/src/domain')
+project(':actions-and-shifts-manager:domain').projectDir = file('./src/actions-and-shifts-manager/src/domain')
+project(':shared:application').projectDir = file('./src/shared/src/application')
+project(':actions-and-shifts-manager:application').projectDir = file('./src/actions-and-shifts-manager/src/application')
+project(':actions-and-shifts-manager:mongo').projectDir = file('./src/actions-and-shifts-manager/src/infrastructure/driven-adapters/mongo')
+project(':actions-and-shifts-manager:main-service').projectDir = file('./src/actions-and-shifts-manager/src/infrastructure/driving-adapters/main-service')
+
+
