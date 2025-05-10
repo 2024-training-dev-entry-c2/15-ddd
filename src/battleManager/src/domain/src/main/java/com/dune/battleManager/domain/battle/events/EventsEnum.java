@@ -1,0 +1,12 @@
+package com.dune.battleManager.domain.battle.events;
+
+public enum EventsEnum {
+    CONFLICT_WINNER_DETERMINED,
+    NEW_ROUND_STARTED,
+    PARTICIPANTS_CONFIRMED,
+    REWARDS_GRANTED,
+    TERRITORY_BONUS_APPLIED,
+    TERRITORY_CURSE_APPLIED,
+    PLAYERS_LOADED,
+    INITIALIZED_GAME
+}
